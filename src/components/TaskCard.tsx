@@ -15,7 +15,7 @@ import {
   Delete as DeleteIcon,
   AccessTime as TimeIcon,
 } from '@mui/icons-material';
-import { Task, PRIORITY_COLORS } from '../types/kanban';
+import { Task, PRIORITY_COLORS, PRIORITY_LABELS, Priority } from '../types/kanban';
 
 interface TaskCardProps {
   task: Task;
@@ -30,7 +30,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   onDelete,
   isDragging = false,
 }) => {
-  const formatDate = (date: Date) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: '2-digit',
@@ -39,13 +40,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     }).format(date);
   };
 
-  const getPriorityLabel = (priority: string) => {
-    const labels = {
-      low: 'Baixa',
-      medium: 'Média',
-      high: 'Alta',
-    };
-    return labels[priority as keyof typeof labels] || priority;
+  const getPriorityLabel = (priority?: number | null) => {
+    if (!priority) return 'Sem prioridade';
+    return PRIORITY_LABELS[priority as Priority] || 'Sem prioridade';
+  };
+
+  const getPriorityColor = (priority?: number | null) => {
+    if (!priority) return '#DDD';
+    return PRIORITY_COLORS[priority as Priority] || '#DDD';
   };
 
   return (
@@ -58,20 +60,22 @@ export const TaskCard: React.FC<TaskCardProps> = ({
         '&:active': {
           cursor: 'grabbing',
         },
-        background: 'linear-gradient(135deg, #FFFFFF 0%, #FFE4E1 100%)',
-        border: '2px solid transparent',
+        background: 'linear-gradient(135deg, #FFFFFF 0%, #F3E5F5 100%)',
+        border: '2px solid #FF6B9D',
         '&:hover': {
-          border: '2px solid #FF69B4',
+          border: '2px solid #E91E63',
+          boxShadow: '6px 6px 0px rgba(255, 107, 157, 0.4)',
         },
       }}
     >
       <CardContent sx={{ pb: 1 }}>
         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={1}>
           <Typography variant="h6" component="h3" sx={{ 
-            fontWeight: 600, 
-            color: '#FF1493',
+            fontWeight: 700, 
+            color: '#E91E63',
             flexGrow: 1,
             mr: 1,
+            textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
           }}>
             {task.title}
           </Typography>
@@ -79,14 +83,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             <IconButton 
               size="small" 
               onClick={() => onEdit?.(task)}
-              sx={{ color: '#FF69B4', p: 0.5 }}
+              sx={{ color: '#FF6B9D', p: 0.5 }}
             >
               <EditIcon fontSize="small" />
             </IconButton>
             <IconButton 
               size="small" 
               onClick={() => onDelete?.(task.id)}
-              sx={{ color: '#FF69B4', p: 0.5 }}
+              sx={{ color: '#FF6B9D', p: 0.5 }}
             >
               <DeleteIcon fontSize="small" />
             </IconButton>
@@ -108,7 +112,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             label={getPriorityLabel(task.priority)}
             size="small"
             sx={{
-              backgroundColor: PRIORITY_COLORS[task.priority],
+              backgroundColor: getPriorityColor(task.priority),
               color: '#FFFFFF',
               fontWeight: 600,
               '& .MuiChip-label': {
@@ -118,25 +122,25 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           />
           
           <Box display="flex" alignItems="center" gap={0.5}>
-            <TimeIcon sx={{ fontSize: 14, color: '#DDA0DD' }} />
+            <TimeIcon sx={{ fontSize: 14, color: '#9C27B0' }} />
             <Typography variant="caption" color="text.secondary">
-              {formatDate(task.updatedAt)}
+              {formatDate(task.created_at)}
             </Typography>
           </Box>
         </Box>
 
-        {/* Ditto Avatar decorativo */}
+        {/* Indicador decorativo pixel art */}
         <Box display="flex" justifyContent="center" mt={1}>
-          <Avatar
+          <Box
             sx={{
-              width: 24,
-              height: 24,
-              backgroundColor: '#FF69B4',
-              fontSize: '12px',
+              width: 16,
+              height: 16,
+              borderRadius: 0,
+              backgroundColor: '#FF6B9D',
+              border: '2px solid #E91E63',
+              transform: 'rotate(45deg)',
             }}
-          >
-            ✨
-          </Avatar>
+          />
         </Box>
       </CardContent>
     </Card>

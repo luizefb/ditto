@@ -15,23 +15,109 @@ import {
   Settings as SettingsIcon,
   Notifications as NotificationsIcon,
   Add as AddIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import { KanbanColumn } from './KanbanColumn';
 import { TaskDialog } from './TaskDialog';
-import { Board, Task, Column } from '../types/kanban';
+import { ColumnDialog } from './ColumnDialog';
+import { Board, Task, Column, Priority, CreateColumn, CreateTask, UpdateColumn, UpdateTask, DEFAULT_COLUMN_COLORS } from '../types/kanban';
+import { createColumn, updateColumn, deleteColumn, createTask, updateTask, deleteTask, moveTask, getBoardById } from '../lib/api';
 
 interface KanbanBoardProps {
   board: Board;
   onUpdateBoard?: (board: Board) => void;
+  onBack?: () => void;
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   board,
   onUpdateBoard,
+  onBack,
 }) => {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [isTaskDialogOpen, setIsTaskDialogOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState<Column | null>(null);
+  const [isColumnDialogOpen, setIsColumnDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const refreshBoard = async () => {
+    try {
+      const updatedBoard = await getBoardById(board.id);
+      if (updatedBoard) {
+        onUpdateBoard?.(updatedBoard);
+      }
+    } catch (error) {
+      console.error('Erro ao recarregar board:', error);
+    }
+  };
+
+  const handleAddColumn = () => {
+    setSelectedColumn(null);
+    setIsColumnDialogOpen(true);
+  };
+
+  const handleEditColumn = (column: Column) => {
+    setSelectedColumn(column);
+    setIsColumnDialogOpen(true);
+  };
+
+  const handleDeleteColumn = async (columnId: string) => {
+    if (!confirm('Tem certeza que deseja deletar esta coluna? Todas as tarefas serão perdidas.')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const success = await deleteColumn(columnId);
+      
+      if (success) {
+        await refreshBoard();
+      }
+    } catch (error) {
+      console.error('Erro ao deletar coluna:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveColumn = async (columnData: { title: string }) => {
+    try {
+      setLoading(true);
+      
+      if (selectedColumn) {
+        // Editando coluna existente
+        const updateData: UpdateColumn = {
+          title: columnData.title,
+        };
+
+        const updatedColumn = await updateColumn(selectedColumn.id, updateData);
+        if (updatedColumn) {
+          await refreshBoard();
+        }
+      } else {
+        // Criando nova coluna
+        const nextOrder = (board.columns?.length || 0) + 1;
+        const createData: CreateColumn = {
+          title: columnData.title,
+          board_id: board.id,
+          order: nextOrder,
+        };
+
+        const newColumn = await createColumn(createData);
+        if (newColumn) {
+          await refreshBoard();
+        }
+      }
+
+      setIsColumnDialogOpen(false);
+      setSelectedColumn(null);
+    } catch (error) {
+      console.error('Erro ao salvar coluna:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddTask = (columnId: string) => {
     setSelectedColumnId(columnId);
@@ -45,103 +131,71 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     setIsTaskDialogOpen(true);
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    const updatedColumns = board.columns.map(column => ({
-      ...column,
-      tasks: column.tasks.filter(task => task.id !== taskId),
-    }));
-
-    const updatedBoard = {
-      ...board,
-      columns: updatedColumns,
-      updatedAt: new Date(),
-    };
-
-    onUpdateBoard?.(updatedBoard);
-  };
-
-  const handleSaveTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (selectedTask) {
-      // Editando tarefa existente
-      const updatedTask: Task = {
-        ...selectedTask,
-        ...taskData,
-        updatedAt: new Date(),
-      };
-
-      const updatedColumns = board.columns.map(column => ({
-        ...column,
-        tasks: column.tasks.map(task => 
-          task.id === selectedTask.id ? updatedTask : task
-        ),
-      }));
-
-      const updatedBoard = {
-        ...board,
-        columns: updatedColumns,
-        updatedAt: new Date(),
-      };
-
-      onUpdateBoard?.(updatedBoard);
-    } else if (selectedColumnId) {
-      // Criando nova tarefa
-      const newTask: Task = {
-        id: Date.now().toString(),
-        ...taskData,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      const updatedColumns = board.columns.map(column => 
-        column.id === selectedColumnId 
-          ? { ...column, tasks: [...column.tasks, newTask] }
-          : column
-      );
-
-      const updatedBoard = {
-        ...board,
-        columns: updatedColumns,
-        updatedAt: new Date(),
-      };
-
-      onUpdateBoard?.(updatedBoard);
-    }
-
-    setIsTaskDialogOpen(false);
-    setSelectedTask(null);
-    setSelectedColumnId(null);
-  };
-
-  const handleDropTask = (taskId: string, targetColumnId: string) => {
-    // Encontrar a tarefa e removê-la da coluna atual
-    let taskToMove: Task | null = null;
-    const updatedColumns = board.columns.map(column => {
-      const taskIndex = column.tasks.findIndex(task => task.id === taskId);
-      if (taskIndex !== -1) {
-        taskToMove = column.tasks[taskIndex];
-        return {
-          ...column,
-          tasks: column.tasks.filter(task => task.id !== taskId),
-        };
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      setLoading(true);
+      const success = await deleteTask(taskId);
+      
+      if (success) {
+        // Recarregar board atualizado
+        await refreshBoard();
       }
-      return column;
-    });
+    } catch (error) {
+      console.error('Erro ao deletar tarefa:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // Adicionar a tarefa na coluna de destino
-    if (taskToMove) {
-      const finalColumns = updatedColumns.map(column => 
-        column.id === targetColumnId
-          ? { ...column, tasks: [...column.tasks, taskToMove!] }
-          : column
-      );
+  const handleSaveTask = async (taskData: { title: string; description?: string; priority?: Priority }) => {
+    try {
+      setLoading(true);
+      
+      if (selectedTask) {
+        // Editando tarefa existente
+        const updateData: UpdateTask = {
+          ...taskData,
+        };
 
-      const updatedBoard = {
-        ...board,
-        columns: finalColumns,
-        updatedAt: new Date(),
-      };
+        const updatedTask = await updateTask(selectedTask.id, updateData);
+        if (updatedTask) {
+          await refreshBoard();
+        }
+      } else if (selectedColumnId) {
+        // Criando nova tarefa
+        const createData: CreateTask = {
+          column_id: selectedColumnId,
+          ...taskData,
+        };
 
-      onUpdateBoard?.(updatedBoard);
+        const newTask = await createTask(createData);
+        if (newTask) {
+          await refreshBoard();
+        }
+      }
+
+      setIsTaskDialogOpen(false);
+      setSelectedTask(null);
+      setSelectedColumnId(null);
+    } catch (error) {
+      console.error('Erro ao salvar tarefa:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDropTask = async (taskId: string, targetColumnId: string) => {
+    try {
+      setLoading(true);
+      const movedTask = await moveTask(taskId, targetColumnId);
+      
+      if (movedTask) {
+        await refreshBoard();
+      }
+    } catch (error) {
+      console.error('Erro ao mover tarefa:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,18 +203,39 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     <>
       {/* Header */}
       <AppBar position="static" sx={{ 
-        background: 'linear-gradient(45deg, #FF69B4 30%, #FF1493 90%)',
+        background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
         mb: 3,
       }}>
         <Toolbar>
-          <Avatar sx={{ 
+          {onBack && (
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={onBack}
+              sx={{ mr: 2 }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          )}
+          
+          <Box sx={{ 
             mr: 2, 
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
             backgroundColor: '#FFFFFF',
-            color: '#FF69B4',
-            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '2px solid #C48B9F',
           }}>
-            ✨
-          </Avatar>
+            <Box sx={{ 
+              width: 12,
+              height: 12,
+              borderRadius: '50%',
+              backgroundColor: '#C48B9F',
+            }} />
+          </Box>
           
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
             {board.title}
@@ -169,6 +244,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
           <Button
             color="inherit"
             startIcon={<AddIcon />}
+            onClick={handleAddColumn}
+            disabled={loading}
             sx={{ mr: 2, fontWeight: 600 }}
           >
             Nova Coluna
@@ -201,12 +278,12 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               borderRadius: '4px',
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#FF69B4',
+              backgroundColor: '#C48B9F',
               borderRadius: '4px',
             },
           }}
         >
-          {board.columns.map((column) => (
+          {(board.columns || []).map((column) => (
             <KanbanColumn
               key={column.id}
               column={column}
@@ -214,6 +291,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               onEditTask={handleEditTask}
               onDeleteTask={handleDeleteTask}
               onDropTask={handleDropTask}
+              onEditColumn={handleEditColumn}
+              onDeleteColumn={handleDeleteColumn}
             />
           ))}
         </Box>
@@ -225,6 +304,14 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         task={selectedTask}
         onClose={() => setIsTaskDialogOpen(false)}
         onSave={handleSaveTask}
+      />
+
+      {/* Column Dialog */}
+      <ColumnDialog
+        open={isColumnDialogOpen}
+        column={selectedColumn}
+        onClose={() => setIsColumnDialogOpen(false)}
+        onSave={handleSaveColumn}
       />
     </>
   );

@@ -13,6 +13,8 @@ import {
 import {
   Add as AddIcon,
   MoreVert as MoreVertIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
 } from '@mui/icons-material';
 import { TaskCard } from './TaskCard';
 import { Column, Task } from '../types/kanban';
@@ -23,6 +25,8 @@ interface KanbanColumnProps {
   onEditTask?: (task: Task) => void;
   onDeleteTask?: (taskId: string) => void;
   onDropTask?: (taskId: string, columnId: string) => void;
+  onEditColumn?: (column: Column) => void;
+  onDeleteColumn?: (columnId: string) => void;
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
@@ -31,6 +35,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   onEditTask,
   onDeleteTask,
   onDropTask,
+  onEditColumn,
+  onDeleteColumn,
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -66,11 +72,11 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         p: 2,
         mx: 1,
         background: isDragOver 
-          ? 'linear-gradient(135deg, #FFE4E1 0%, #FFB6C1 100%)'
-          : 'linear-gradient(135deg, #FFFFFF 0%, #FFF0F5 100%)',
-        border: isDragOver ? '2px dashed #FF69B4' : '2px solid transparent',
+          ? 'linear-gradient(135deg, #F8F6F7 0%, #E8C2CA 100%)'
+          : 'linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%)',
+        border: isDragOver ? '2px dashed #C48B9F' : '2px solid transparent',
         transition: 'all 0.3s ease',
-        borderRadius: 3,
+        borderRadius: 1,
       }}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -89,16 +95,16 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           />
           <Typography variant="h6" component="h2" sx={{ 
             fontWeight: 600,
-            color: '#FF1493',
+            color: '#A67C89',
           }}>
             {column.title}
           </Typography>
           <Badge
-            badgeContent={column.tasks.length}
+            badgeContent={column.tasks?.length || 0}
             color="secondary"
             sx={{
               '& .MuiBadge-badge': {
-                backgroundColor: '#FF69B4',
+                backgroundColor: '#C48B9F',
                 color: 'white',
                 fontWeight: 600,
               },
@@ -106,12 +112,25 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           />
         </Box>
         
-        <IconButton size="small" sx={{ color: '#DDA0DD' }}>
-          <MoreVertIcon />
-        </IconButton>
+        <Box>
+          <IconButton 
+            size="small" 
+            onClick={() => onEditColumn?.(column)}
+            sx={{ color: '#B8A9C9', p: 0.5 }}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton 
+            size="small" 
+            onClick={() => onDeleteColumn?.(column.id)}
+            sx={{ color: '#B8A9C9', p: 0.5 }}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Box>
       </Box>
 
-      <Divider sx={{ mb: 2, backgroundColor: '#FFB6C1' }} />
+      <Divider sx={{ mb: 2, backgroundColor: '#E8C2CA' }} />
 
       {/* Lista de tarefas */}
       <Box
@@ -127,12 +146,12 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             borderRadius: '3px',
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: '#FF69B4',
+            backgroundColor: '#C48B9F',
             borderRadius: '3px',
           },
         }}
       >
-        {column.tasks.map((task) => (
+        {(column.tasks || []).map((task) => (
           <div
             key={task.id}
             draggable
@@ -146,7 +165,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           </div>
         ))}
         
-        {column.tasks.length === 0 && (
+        {(column.tasks?.length || 0) === 0 && (
           <Box
             display="flex"
             flexDirection="column"
@@ -154,7 +173,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             justifyContent="center"
             sx={{
               height: 200,
-              color: '#DDA0DD',
+              color: '#B8A9C9',
               textAlign: 'center',
             }}
           >
@@ -162,7 +181,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
               Nenhuma tarefa ainda
             </Typography>
             <Typography variant="caption">
-              ✨ Adicione uma nova tarefa! ✨
+              Adicione uma nova tarefa
             </Typography>
           </Box>
         )}
@@ -175,9 +194,9 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           color="primary"
           onClick={() => onAddTask?.(column.id)}
           sx={{
-            background: 'linear-gradient(45deg, #FF69B4 30%, #FF1493 90%)',
+            background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #FF1493 30%, #DC143C 90%)',
+              background: 'linear-gradient(45deg, #A67C89 30%, #8B6B73 90%)',
             },
           }}
         >

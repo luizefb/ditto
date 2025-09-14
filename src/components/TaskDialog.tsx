@@ -16,13 +16,13 @@ import {
   Typography,
   Avatar,
 } from '@mui/material';
-import { Task, Priority } from '../types/kanban';
+import { Task, Priority, PRIORITY_LABELS, PRIORITY_COLORS } from '../types/kanban';
 
 interface TaskDialogProps {
   open: boolean;
   task?: Task | null;
   onClose: () => void;
-  onSave: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onSave: (task: { title: string; description?: string; priority?: Priority }) => void;
 }
 
 export const TaskDialog: React.FC<TaskDialogProps> = ({
@@ -33,17 +33,17 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState<Priority>('medium');
+  const [priority, setPriority] = useState<Priority>(2);
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description || '');
-      setPriority(task.priority);
+      setPriority((task.priority as Priority) || 2);
     } else {
       setTitle('');
       setDescription('');
-      setPriority('medium');
+      setPriority(2);
     }
   }, [task]);
 
@@ -59,7 +59,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
     // Reset form
     setTitle('');
     setDescription('');
-    setPriority('medium');
+    setPriority(2);
   };
 
   const handleClose = () => {
@@ -67,16 +67,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
     // Reset form
     setTitle('');
     setDescription('');
-    setPriority('medium');
-  };
-
-  const getPriorityLabel = (priority: Priority) => {
-    const labels = {
-      low: 'Baixa',
-      medium: 'Média',
-      high: 'Alta',
-    };
-    return labels[priority];
+    setPriority(2);
   };
 
   return (
@@ -87,26 +78,35 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       fullWidth
       PaperProps={{
         sx: {
-          background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF0F5 100%)',
-          border: '2px solid #FF69B4',
+          background: 'linear-gradient(135deg, #FFFFFF 0%, #F8F6F7 100%)',
+          border: '2px solid #C48B9F',
           borderRadius: 3,
         },
       }}
     >
       <DialogTitle sx={{ 
         textAlign: 'center',
-        color: '#FF1493',
+        color: '#A67C89',
         fontWeight: 600,
         pb: 1,
       }}>
         <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
-          <Avatar sx={{ 
-            backgroundColor: '#FF69B4',
+          <Box sx={{ 
+            backgroundColor: '#C48B9F',
             width: 32,
             height: 32,
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
-            ✨
-          </Avatar>
+            <Box sx={{ 
+              width: 12,
+              height: 12,
+              borderRadius: '50%',
+              backgroundColor: '#FFFFFF',
+            }} />
+          </Box>
           <Typography variant="h6" component="span">
             {task ? 'Editar Tarefa' : 'Nova Tarefa'}
           </Typography>
@@ -126,14 +126,14 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               '&:hover fieldset': {
-                borderColor: '#FF69B4',
+                borderColor: '#C48B9F',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#FF69B4',
+                borderColor: '#C48B9F',
               },
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#FF69B4',
+              color: '#C48B9F',
             },
           }}
         />
@@ -151,14 +151,14 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               '&:hover fieldset': {
-                borderColor: '#FF69B4',
+                borderColor: '#C48B9F',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#FF69B4',
+                borderColor: '#C48B9F',
               },
             },
             '& .MuiInputLabel-root.Mui-focused': {
-              color: '#FF69B4',
+              color: '#C48B9F',
             },
           }}
         />
@@ -184,43 +184,43 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
               },
             }}
           >
-            <MenuItem value="low">
+            <MenuItem value={1}>
               <Box display="flex" alignItems="center" gap={1}>
                 <Box
                   sx={{
                     width: 12,
                     height: 12,
                     borderRadius: '50%',
-                    backgroundColor: '#90EE90',
+                    backgroundColor: PRIORITY_COLORS[1],
                   }}
                 />
-                {getPriorityLabel('low')}
+                {PRIORITY_LABELS[1]}
               </Box>
             </MenuItem>
-            <MenuItem value="medium">
+            <MenuItem value={2}>
               <Box display="flex" alignItems="center" gap={1}>
                 <Box
                   sx={{
                     width: 12,
                     height: 12,
                     borderRadius: '50%',
-                    backgroundColor: '#FFD700',
+                    backgroundColor: PRIORITY_COLORS[2],
                   }}
                 />
-                {getPriorityLabel('medium')}
+                {PRIORITY_LABELS[2]}
               </Box>
             </MenuItem>
-            <MenuItem value="high">
+            <MenuItem value={3}>
               <Box display="flex" alignItems="center" gap={1}>
                 <Box
                   sx={{
                     width: 12,
                     height: 12,
                     borderRadius: '50%',
-                    backgroundColor: '#FF6B6B',
+                    backgroundColor: PRIORITY_COLORS[3],
                   }}
                 />
-                {getPriorityLabel('high')}
+                {PRIORITY_LABELS[3]}
               </Box>
             </MenuItem>
           </Select>
@@ -231,7 +231,7 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
         <Button 
           onClick={handleClose}
           sx={{ 
-            color: '#DDA0DD',
+            color: '#B8A9C9',
             '&:hover': {
               backgroundColor: '#F0E6FF',
             },
@@ -244,12 +244,12 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
           variant="contained"
           disabled={!title.trim()}
           sx={{
-            background: 'linear-gradient(45deg, #FF69B4 30%, #FF1493 90%)',
+            background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #FF1493 30%, #DC143C 90%)',
+              background: 'linear-gradient(45deg, #A67C89 30%, #8B6B73 90%)',
             },
             '&:disabled': {
-              background: '#DDA0DD',
+              background: '#B8A9C9',
               color: '#FFFFFF',
             },
           }}

@@ -38,9 +38,16 @@ export const FloatingDitto: React.FC<FloatingDittoProps> = ({
           },
         }}
       >
-        <Typography sx={{ fontSize: `${size}px`, filter: 'blur(1px)' }}>
-          ✨
-        </Typography>
+        <Box
+          sx={{
+            width: size,
+            height: size,
+            borderRadius: 0, // Forma pixelada
+            backgroundColor: 'rgba(255, 107, 157, 0.2)',
+            border: '2px solid rgba(255, 107, 157, 0.4)',
+            transform: 'rotate(45deg)', // Losango pixel art
+          }}
+        />
       </Box>
     </Fade>
   );
@@ -81,7 +88,16 @@ export const DittoLoader: React.FC<DittoLoaderProps> = ({ size = 40 }) => {
         },
       }}
     >
-      <Typography sx={{ fontSize: `${size}px` }}>✨</Typography>
+      <Box
+        sx={{
+          width: size,
+          height: size,
+          borderRadius: 0,
+          backgroundColor: 'rgba(255, 107, 157, 0.3)',
+          border: '2px solid rgba(255, 107, 157, 0.5)',
+          transform: 'rotate(45deg)',
+        }}
+      />
     </Box>
   );
 };
@@ -92,25 +108,32 @@ export const DittoWelcome: React.FC = () => {
       sx={{
         textAlign: 'center',
         p: 4,
-        background: 'linear-gradient(135deg, #FFE4E1 0%, #FFB6C1 100%)',
-        borderRadius: 3,
-        border: '2px solid #FF69B4',
+        background: 'linear-gradient(135deg, #FFFFFF 0%, #F3E5F5 100%)',
+        borderRadius: 4,
+        border: '3px solid #FF6B9D',
+        boxShadow: '4px 4px 0px rgba(255, 107, 157, 0.3)',
         mb: 3,
       }}
     >
       <Typography variant="h4" sx={{ 
-        color: '#FF1493',
+        color: '#E91E63',
         fontWeight: 700,
         mb: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 1,
+        textShadow: '2px 2px 0px rgba(0,0,0,0.1)',
       }}>
-✨ Bem-vindo ao Ditto Kanban! ✨
+        BEM-VINDO AO DITTO KANBAN
       </Typography>
-      <Typography variant="body1" sx={{ color: '#DDA0DD' }}>
-        Organize suas tarefas com a magia e flexibilidade do Pokémon Ditto!
+      <Typography variant="body1" sx={{ 
+        color: '#9C27B0',
+        fontWeight: 500,
+        textTransform: 'uppercase',
+        letterSpacing: '1px',
+      }}>
+        ORGANIZE SUAS TAREFAS COM ESTILO PIXEL ART
       </Typography>
     </Box>
   );

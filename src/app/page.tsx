@@ -1,110 +1,83 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Box, CircularProgress, Typography, Alert } from '@mui/material';
 import { KanbanBoard } from '../components/KanbanBoard';
-import { Board } from '../types/kanban';
-
-// Dados de exemplo para demonstrar o Kanban
-const initialBoard: Board = {
-  id: '1',
-  title: 'Ditto Kanban - Organizador de Tarefas ✨',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  columns: [
-    {
-      id: 'todo',
-      title: 'Para Fazer',
-      color: '#FF69B4',
-      tasks: [
-        {
-          id: '1',
-          title: 'Estudar React Hooks',
-          description: 'Revisar useState, useEffect e custom hooks',
-          priority: 'high',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: '2',
-          title: 'Implementar tema escuro',
-          description: 'Adicionar toggle para alternar entre tema claro e escuro',
-          priority: 'medium',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-    },
-    {
-      id: 'doing',
-      title: 'Fazendo',
-      color: '#FFD700',
-      tasks: [
-        {
-          id: '3',
-          title: 'Criar componentes MUI',
-          description: 'Desenvolver interface com Material-UI e temática do Ditto',
-          priority: 'high',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-    },
-    {
-      id: 'review',
-      title: 'Em Revisão',
-      color: '#90EE90',
-      tasks: [
-        {
-          id: '4',
-          title: 'Testar funcionalidade drag and drop',
-          description: 'Verificar se as tarefas estão sendo movidas corretamente entre colunas',
-          priority: 'medium',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-    },
-    {
-      id: 'done',
-      title: 'Concluído',
-      color: '#DDA0DD',
-      tasks: [
-        {
-          id: '5',
-          title: 'Setup inicial do projeto',
-          description: 'Configurar Next.js, TypeScript e Material-UI',
-          priority: 'low',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          id: '6',
-          title: 'Definir paleta de cores',
-          description: 'Escolher cores baseadas na temática do Pokémon Ditto',
-          priority: 'low',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      ],
-    },
-  ],
-};
+import { BoardManager } from '../components/BoardManager';
+import { useApp } from '../contexts/AppContext';
 
 export default function Home() {
-  const [board, setBoard] = useState<Board>(initialBoard);
+  const { currentBoard, loading, error, updateBoard, setCurrentBoard } = useApp();
 
-  const handleUpdateBoard = (updatedBoard: Board) => {
-    setBoard(updatedBoard);
-    // Aqui você poderia salvar no localStorage ou enviar para uma API
-    console.log('Board atualizado:', updatedBoard);
-  };
+  if (loading) {
+    return (
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        sx={{ backgroundColor: '#F3E5F5' }}
+      >
+        <Box textAlign="center">
+          <CircularProgress 
+            size={60} 
+            sx={{ 
+              color: '#FF6B9D',
+              mb: 2,
+            }} 
+          />
+          <Typography variant="h6" sx={{ 
+            color: '#E91E63',
+            fontWeight: 700,
+            textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
+          }}>
+            CARREGANDO DITTO KANBAN...
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        sx={{ backgroundColor: '#FAFAFA', p: 3 }}
+      >
+        <Alert 
+          severity="error" 
+          sx={{ 
+            maxWidth: 500,
+            '& .MuiAlert-icon': {
+              color: '#E91E63',
+            },
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Ops! Algo deu errado
+          </Typography>
+          <Typography variant="body2">
+            {error}
+          </Typography>
+        </Alert>
+      </Box>
+    );
+  }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#FFF0F5' }}>
-      <KanbanBoard
-        board={board}
-        onUpdateBoard={handleUpdateBoard}
-      />
+    <div style={{ minHeight: '100vh', backgroundColor: '#F3E5F5' }}>
+      {currentBoard ? (
+        <KanbanBoard
+          board={currentBoard}
+          onUpdateBoard={updateBoard}
+          onBack={() => setCurrentBoard(null)}
+        />
+      ) : (
+        <BoardManager />
+      )}
     </div>
   );
 }
