@@ -155,12 +155,22 @@ export const BoardManager: React.FC = () => {
         </Box>
         
         <Fab
-          color="primary"
           onClick={() => setIsCreateDialogOpen(true)}
           sx={{
-            background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
+            backgroundColor: '#2196F3',
+            color: '#FFFFFF',
+            border: '2px solid #1976D2',
+            boxShadow: '3px 3px 0px rgba(0,0,0,0.3)',
+            width: 64,
+            height: 64,
             '&:hover': {
-              background: 'linear-gradient(45deg, #A67C89 30%, #8B6B73 90%)',
+              backgroundColor: '#1976D2',
+              transform: 'translate(-2px, -2px)',
+              boxShadow: '5px 5px 0px rgba(0,0,0,0.4)',
+            },
+            '&:active': {
+              transform: 'translate(1px, 1px)',
+              boxShadow: '2px 2px 0px rgba(0,0,0,0.3)',
             },
           }}
         >

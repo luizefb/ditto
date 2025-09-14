@@ -203,7 +203,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     <>
       {/* Header */}
       <AppBar position="static" sx={{ 
-        background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
+        background: '#FF6B9D',
+        boxShadow: '0 2px 0px rgba(255, 107, 157, 0.3)',
         mb: 3,
       }}>
         <Toolbar>
@@ -220,20 +221,21 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
           
           <Box sx={{ 
             mr: 2, 
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
+            width: 32,
+            height: 32,
+            borderRadius: 0,
             backgroundColor: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: '2px solid #C48B9F',
+            border: '2px solid #FFFFFF',
           }}>
             <Box sx={{ 
               width: 12,
               height: 12,
-              borderRadius: '50%',
-              backgroundColor: '#C48B9F',
+              borderRadius: 0,
+              backgroundColor: '#FF6B9D',
+              transform: 'rotate(45deg)',
             }} />
           </Box>
           
@@ -246,7 +248,16 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             startIcon={<AddIcon />}
             onClick={handleAddColumn}
             disabled={loading}
-            sx={{ mr: 2, fontWeight: 600 }}
+            sx={{ 
+              mr: 2, 
+              fontWeight: 600,
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: 1,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              },
+            }}
           >
             Nova Coluna
           </Button>

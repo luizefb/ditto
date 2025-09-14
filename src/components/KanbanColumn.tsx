@@ -93,7 +93,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
               backgroundColor: column.color,
             }}
           />
-          <Typography variant="h6" component="h2" sx={{ 
+          <Typography variant="h6" component="h2" marginRight={1} sx={{ 
             fontWeight: 600,
             color: '#A67C89',
           }}>
@@ -107,6 +107,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                 backgroundColor: '#C48B9F',
                 color: 'white',
                 fontWeight: 600,
+                
               },
             }}
           />
@@ -191,12 +192,20 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       <Box display="flex" justifyContent="center" mt={2}>
         <Fab
           size="small"
-          color="primary"
           onClick={() => onAddTask?.(column.id)}
           sx={{
-            background: 'linear-gradient(45deg, #C48B9F 30%, #A67C89 90%)',
+            backgroundColor: '#FFD700',
+            color: '#000000',
+            border: '2px solid #FFC107',
+            boxShadow: '2px 2px 0px rgba(0,0,0,0.3)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #A67C89 30%, #8B6B73 90%)',
+              backgroundColor: '#FFC107',
+              transform: 'translate(-1px, -1px)',
+              boxShadow: '3px 3px 0px rgba(0,0,0,0.4)',
+            },
+            '&:active': {
+              transform: 'translate(1px, 1px)',
+              boxShadow: '1px 1px 0px rgba(0,0,0,0.3)',
             },
           }}
         >
