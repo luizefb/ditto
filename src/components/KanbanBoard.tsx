@@ -205,24 +205,34 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
       <AppBar position="static" sx={{ 
         background: '#FF6B9D',
         boxShadow: '0 2px 0px rgba(255, 107, 157, 0.3)',
-        mb: 3,
+        mb: { xs: 2, sm: 3 },
       }}>
-        <Toolbar>
+        <Toolbar 
+          sx={{ 
+            px: { xs: 1, sm: 2 },
+            py: { xs: 0.5, sm: 1 },
+            minHeight: { xs: 56, sm: 64 },
+          }}
+        >
           {onBack && (
             <IconButton
               edge="start"
               color="inherit"
               onClick={onBack}
-              sx={{ mr: 2 }}
+              size="small"
+              sx={{ 
+                mr: { xs: 0.5, sm: 1 },
+                p: { xs: 0.5, sm: 1 },
+              }}
             >
-              <ArrowBackIcon />
+              <ArrowBackIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
           )}
           
           <Box sx={{ 
-            mr: 2, 
-            width: 32,
-            height: 32,
+            mr: { xs: 0.5, sm: 1 }, 
+            width: { xs: 20, sm: 28 },
+            height: { xs: 20, sm: 28 },
             borderRadius: 0,
             backgroundColor: '#FFFFFF',
             display: 'flex',
@@ -231,83 +241,172 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             border: '2px solid #FFFFFF',
           }}>
             <Box sx={{ 
-              width: 12,
-              height: 12,
+              width: { xs: 6, sm: 10 },
+              height: { xs: 6, sm: 10 },
               borderRadius: 0,
               backgroundColor: '#FF6B9D',
               transform: 'rotate(45deg)',
             }} />
           </Box>
           
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
+          <Typography 
+            variant="h6" 
+            component="div" 
+            sx={{ 
+              flexGrow: 1, 
+              fontWeight: 600,
+              fontSize: { xs: '0.9rem', sm: '1.25rem' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              mr: 1,
+            }}
+          >
             {board.title}
           </Typography>
           
+          {/* Botão Nova Coluna - sempre visível */}
           <Button
             color="inherit"
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ display: { xs: 'none', sm: 'inline-flex' } }} />}
             onClick={handleAddColumn}
             disabled={loading}
             sx={{ 
-              mr: 2, 
+              mr: { xs: 1, sm: 2 }, 
               fontWeight: 600,
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
               border: '1px solid rgba(255, 255, 255, 0.3)',
               borderRadius: 1,
+              fontSize: { xs: '0.8rem', sm: '0.875rem' },
+              px: { xs: 1.5, sm: 2 },
+              py: { xs: 0.5, sm: 1 },
+              minWidth: { xs: 'auto', sm: 'auto' },
+              height: { xs: 32, sm: 36 },
               '&:hover': {
                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
               },
             }}
           >
-            Nova Coluna
+            {/* Mobile: só ícone */}
+            <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}>
+              <AddIcon fontSize="small" />
+            </Box>
+            {/* Desktop: texto completo */}
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              Nova Coluna
+            </Box>
           </Button>
           
-          <IconButton color="inherit">
-            <NotificationsIcon />
-          </IconButton>
-          
-          <IconButton color="inherit">
-            <SettingsIcon />
-          </IconButton>
+          {/* Menu de ações - sempre visível em mobile como ícones compactos */}
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <IconButton 
+              color="inherit"
+              size="small"
+              sx={{ 
+                p: { xs: 0.5, sm: 1 },
+                '& .MuiSvgIcon-root': {
+                  fontSize: { xs: 20, sm: 24 },
+                },
+              }}
+            >
+              <NotificationsIcon />
+            </IconButton>
+            
+            <IconButton 
+              color="inherit"
+              size="small"
+              sx={{ 
+                p: { xs: 0.5, sm: 1 },
+                '& .MuiSvgIcon-root': {
+                  fontSize: { xs: 20, sm: 24 },
+                },
+              }}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
 
       {/* Board Content */}
-      <Container maxWidth={false} sx={{ px: 2 }}>
+      <Box 
+        sx={{ 
+          height: { xs: 'calc(100vh - 100px)', sm: 'calc(100vh - 140px)' },
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Container de rolagem das colunas */}
         <Box
-          display="flex"
-          gap={2}
           sx={{
+            flex: 1,
             overflowX: 'auto',
-            pb: 2,
-            minHeight: 'calc(100vh - 140px)',
+            overflowY: 'hidden',
+            px: { xs: 1, sm: 2 },
+            py: { xs: 1, sm: 2 },
+            // Scroll suave em mobile
+            WebkitOverflowScrolling: 'touch',
+            // Melhora a performance do scroll
+            scrollBehavior: 'smooth',
+            // Estilo da scrollbar
             '&::-webkit-scrollbar': {
-              height: '8px',
+              height: { xs: '6px', sm: '8px' },
             },
             '&::-webkit-scrollbar-track': {
-              backgroundColor: '#FFF0F5',
-              borderRadius: '4px',
+              backgroundColor: 'rgba(255, 240, 245, 0.3)',
+              borderRadius: '6px',
+              margin: '0 8px',
             },
             '&::-webkit-scrollbar-thumb': {
               backgroundColor: '#C48B9F',
-              borderRadius: '4px',
+              borderRadius: '6px',
+              '&:hover': {
+                backgroundColor: '#B8A9C9',
+              },
+              '&:active': {
+                backgroundColor: '#A67C89',
+              },
             },
+            // Sombras nas bordas para indicar scroll em mobile
+            background: {
+              xs: `
+                linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20px),
+                linear-gradient(-90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20px)
+              `,
+              sm: 'none'
+            },
+            backgroundAttachment: 'local, local',
+            backgroundSize: '20px 100%, 20px 100%',
+            backgroundPosition: '0 0, 100% 0',
+            backgroundRepeat: 'no-repeat',
           }}
         >
-          {(board.columns || []).map((column) => (
-            <KanbanColumn
-              key={column.id}
-              column={column}
-              onAddTask={handleAddTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
-              onDropTask={handleDropTask}
-              onEditColumn={handleEditColumn}
-              onDeleteColumn={handleDeleteColumn}
-            />
-          ))}
+          <Box
+            display="flex"
+            gap={{ xs: 2, sm: 3 }}
+            sx={{
+              minWidth: 'max-content',
+              height: '100%',
+              alignItems: 'stretch',
+              pb: 1,
+            }}
+          >
+            {(board.columns || []).map((column) => (
+              <KanbanColumn
+                key={column.id}
+                column={column}
+                onAddTask={handleAddTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onDropTask={handleDropTask}
+                onEditColumn={handleEditColumn}
+                onDeleteColumn={handleDeleteColumn}
+              />
+            ))}
+          </Box>
         </Box>
-      </Container>
+      </Box>
 
       {/* Task Dialog */}
       <TaskDialog
