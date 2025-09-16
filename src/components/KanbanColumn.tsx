@@ -67,10 +67,14 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     <Paper
       elevation={3}
       sx={{
-        width: 320,
-        minHeight: 600,
-        p: 2,
-        mx: 1,
+        width: { xs: 280, sm: 320, md: 340 },
+        minWidth: { xs: 280, sm: 320, md: 340 },
+        height: '100%',
+        maxHeight: '100%',
+        p: { xs: 1.5, sm: 2 },
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
         background: isDragOver 
           ? 'linear-gradient(135deg, #F8F6F7 0%, #E8C2CA 100%)'
           : 'linear-gradient(135deg, #FFFFFF 0%, #FAFAFA 100%)',
@@ -83,64 +87,92 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       onDrop={handleDrop}
     >
       {/* Header da coluna */}
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Box display="flex" alignItems="center" gap={1}>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={{ xs: 1.5, sm: 2 }}>
+        <Box display="flex" alignItems="center" gap={{ xs: 0.5, sm: 1 }} flex={1} minWidth={0}>
           <Box
             sx={{
-              width: 12,
-              height: 12,
+              width: { xs: 10, sm: 12 },
+              height: { xs: 10, sm: 12 },
               borderRadius: '50%',
               backgroundColor: column.color,
+              flexShrink: 0,
             }}
           />
-          <Typography variant="h6" component="h2" marginRight={1} sx={{ 
-            fontWeight: 600,
-            color: '#A67C89',
-          }}>
+          <Typography 
+            variant="h6" 
+            component="h2" 
+            sx={{ 
+              fontWeight: 600,
+              color: '#A67C89',
+              fontSize: { xs: '1rem', sm: '1.25rem' },
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              flex: 1,
+              mr: 0.5,
+            }}
+          >
             {column.title}
           </Typography>
           <Badge
             badgeContent={column.tasks?.length || 0}
             color="secondary"
             sx={{
+              flexShrink: 0,
               '& .MuiBadge-badge': {
                 backgroundColor: '#C48B9F',
                 color: 'white',
                 fontWeight: 600,
-                
+                fontSize: { xs: '0.7rem', sm: '0.75rem' },
+                minWidth: { xs: 16, sm: 20 },
+                height: { xs: 16, sm: 20 },
               },
             }}
           />
         </Box>
         
-        <Box>
+        <Box flexShrink={0}>
           <IconButton 
             size="small" 
             onClick={() => onEditColumn?.(column)}
-            sx={{ color: '#B8A9C9', p: 0.5 }}
+            sx={{ 
+              color: '#B8A9C9', 
+              p: { xs: 0.25, sm: 0.5 },
+              '& .MuiSvgIcon-root': {
+                fontSize: { xs: 16, sm: 20 },
+              },
+            }}
           >
-            <EditIcon fontSize="small" />
+            <EditIcon />
           </IconButton>
           <IconButton 
             size="small" 
             onClick={() => onDeleteColumn?.(column.id)}
-            sx={{ color: '#B8A9C9', p: 0.5 }}
+            sx={{ 
+              color: '#B8A9C9', 
+              p: { xs: 0.25, sm: 0.5 },
+              '& .MuiSvgIcon-root': {
+                fontSize: { xs: 16, sm: 20 },
+              },
+            }}
           >
-            <DeleteIcon fontSize="small" />
+            <DeleteIcon />
           </IconButton>
         </Box>
       </Box>
 
-      <Divider sx={{ mb: 2, backgroundColor: '#E8C2CA' }} />
+      <Divider sx={{ mb: { xs: 1.5, sm: 2 }, backgroundColor: '#E8C2CA' }} />
 
       {/* Lista de tarefas */}
       <Box
         sx={{
-          minHeight: 400,
-          maxHeight: 480,
+          flex: 1,
+          minHeight: 0,
           overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
           '&::-webkit-scrollbar': {
-            width: '6px',
+            width: { xs: '4px', sm: '6px' },
           },
           '&::-webkit-scrollbar-track': {
             backgroundColor: '#FFF0F5',
@@ -173,15 +205,28 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             alignItems="center"
             justifyContent="center"
             sx={{
-              height: 200,
+              flex: 1,
+              minHeight: { xs: 120, sm: 150, md: 200 },
               color: '#B8A9C9',
               textAlign: 'center',
+              px: 1,
             }}
           >
-            <Typography variant="body2" sx={{ mb: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                mb: 1,
+                fontSize: { xs: '0.8rem', sm: '0.875rem' },
+              }}
+            >
               Nenhuma tarefa ainda
             </Typography>
-            <Typography variant="caption">
+            <Typography 
+              variant="caption"
+              sx={{
+                fontSize: { xs: '0.7rem', sm: '0.75rem' },
+              }}
+            >
               Adicione uma nova tarefa
             </Typography>
           </Box>
@@ -189,7 +234,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       </Box>
 
       {/* Botão para adicionar tarefa */}
-      <Box display="flex" justifyContent="center" mt={2}>
+      <Box display="flex" justifyContent="center" mt={{ xs: 1.5, sm: 2 }}>
         <Fab
           size="small"
           onClick={() => onAddTask?.(column.id)}
@@ -198,6 +243,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             color: '#000000',
             border: '2px solid #FFC107',
             boxShadow: '2px 2px 0px rgba(0,0,0,0.3)',
+            width: { xs: 40, sm: 56 },
+            height: { xs: 40, sm: 56 },
             '&:hover': {
               backgroundColor: '#FFC107',
               transform: 'translate(-1px, -1px)',
@@ -206,6 +253,9 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             '&:active': {
               transform: 'translate(1px, 1px)',
               boxShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+            },
+            '& .MuiSvgIcon-root': {
+              fontSize: { xs: 20, sm: 24 },
             },
           }}
         >
