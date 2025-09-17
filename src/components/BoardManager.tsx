@@ -25,12 +25,14 @@ import {
   Edit as EditIcon,
   Visibility as ViewIcon,
 } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
 import { useApp } from '../contexts/AppContext';
 import { createBoard, deleteBoard, updateBoard, getBoardById } from '../lib/api';
 import { Board, CreateBoard, UpdateBoard } from '../types/kanban';
 
 export const BoardManager: React.FC = () => {
-  const { user, boards, refreshBoards, addBoard, removeBoard, setCurrentBoard } = useApp();
+  const { user, boards, refreshBoards, addBoard, removeBoard } = useApp();
+  const router = useRouter();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingBoard, setEditingBoard] = useState<Board | null>(null);
@@ -101,19 +103,8 @@ export const BoardManager: React.FC = () => {
     }
   };
 
-  const handleViewBoard = async (board: Board) => {
-    try {
-      setLoading(true);
-      // Buscar board completo com colunas e tarefas
-      const fullBoard = await getBoardById(board.id);
-      if (fullBoard) {
-        setCurrentBoard(fullBoard);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar board:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleViewBoard = (board: Board) => {
+    router.push(`/board/${board.id}`);
   };
 
   const openEditDialog = (board: Board) => {
