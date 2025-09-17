@@ -6,10 +6,8 @@ import {
   Typography,
   AppBar,
   Toolbar,
-  Avatar,
   IconButton,
   Button,
-  Container,
 } from '@mui/material';
 import {
   Settings as SettingsIcon,
@@ -20,7 +18,7 @@ import {
 import { KanbanColumn } from './KanbanColumn';
 import { TaskDialog } from './TaskDialog';
 import { ColumnDialog } from './ColumnDialog';
-import { Board, Task, Column, Priority, CreateColumn, CreateTask, UpdateColumn, UpdateTask, DEFAULT_COLUMN_COLORS } from '../types/kanban';
+import { Board, Task, Column, Priority, CreateColumn, CreateTask, UpdateColumn, UpdateTask } from '../types/kanban';
 import { createColumn, updateColumn, deleteColumn, createTask, updateTask, deleteTask, moveTask, getBoardById } from '../lib/api';
 
 interface KanbanBoardProps {

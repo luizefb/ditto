@@ -14,7 +14,6 @@ import {
   MenuItem,
   Box,
   Typography,
-  Avatar,
 } from '@mui/material';
 import { Task, Priority, PRIORITY_LABELS, PRIORITY_COLORS } from '../types/kanban';
 

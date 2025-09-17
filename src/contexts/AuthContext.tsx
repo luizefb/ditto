@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@supabase/supabase-js';
-import { authService, AuthUser } from '../lib/supabase';
+import { authService } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -52,7 +52,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = authService.onAuthStateChange(
       async (event, session) => {
-        setUser(session?.user || null);
+        const sessionData = session as { user?: User } | null;
+        setUser(sessionData?.user || null);
         setLoading(false);
       }
     );
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
       await authService.signIn(email, password);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -77,7 +78,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
       await authService.signUp(email, password, name);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -89,7 +90,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
       await authService.signOut();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -100,9 +101,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
   };
 
-  const getErrorMessage = (error: any): string => {
-    if (error.message) {
-      switch (error.message) {
+  const getErrorMessage = (error: unknown): string => {
+    if (error && typeof error === 'object' && 'message' in error) {
+      const message = (error as { message: string }).message;
+      switch (message) {
         case 'Invalid login credentials':
           return 'Email ou senha incorretos';
         case 'User already registered':
@@ -112,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         case 'Unable to validate email address: invalid format':
           return 'Email inválido';
         default:
-          return error.message;
+          return message;
       }
     }
     return 'Ocorreu um erro inesperado';

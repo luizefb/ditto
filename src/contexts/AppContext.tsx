@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User, Board } from '../types/kanban';
 import { createUser, getUserByEmail, getBoardsByOwner } from '../lib/api';
 import { useAuth } from './AuthContext';
@@ -41,7 +41,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const initializeUserFromAuth = async () => {
+  const initializeUserFromAuth = useCallback(async () => {
     if (!authUser) {
       setUser(null);
       setBoards([]);
@@ -77,7 +77,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [authUser]);
 
   const initializeMockUser = async () => {
     await initializeUserFromAuth();
@@ -122,7 +122,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   useEffect(() => {
     initializeUserFromAuth();
-  }, [authUser]);
+  }, [initializeUserFromAuth]);
 
   const value: AppContextType = {
     user,

@@ -94,7 +94,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         await signIn(formData.email, formData.password);
       }
       onSuccess?.();
-    } catch (err) {
+    } catch {
       
     }
   };

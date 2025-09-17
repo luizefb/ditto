@@ -16,7 +16,6 @@ import {
   IconButton,
   Grid,
   Chip,
-  Avatar,
   Fab,
 } from '@mui/material';
 import {

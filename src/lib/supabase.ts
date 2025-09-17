@@ -9,13 +9,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Types for authentication
-export interface AuthUser {
-  id: string;
-  email: string;
-  name?: string;
-}
-
 // Authentication functions
 export const authService = {
   // Sign up with email and password
@@ -66,7 +59,7 @@ export const authService = {
   },
 
   // Listen to auth changes
-  onAuthStateChange(callback: (event: string, session: any) => void) {
+  onAuthStateChange(callback: (event: string, session: unknown) => void) {
     return supabase.auth.onAuthStateChange(callback);
   }
 };

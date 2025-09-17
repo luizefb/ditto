@@ -8,7 +8,6 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  IconButton,
   Divider,
 } from '@mui/material';
 import {

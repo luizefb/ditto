@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import {
   Add as AddIcon,
-  MoreVert as MoreVertIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
