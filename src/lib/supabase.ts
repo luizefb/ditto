@@ -3,104 +3,70 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Tipos do banco para TypeScript
-export type Database = {
-  public: {
-    Tables: {
-      tb_users: {
-        Row: {
-          id: string;
-          created_at: string;
-          name: string;
-          email: string;
-        };
-        Insert: {
-          id?: string;
-          created_at?: string;
-          name: string;
-          email: string;
-        };
-        Update: {
-          id?: string;
-          created_at?: string;
-          name?: string;
-          email?: string;
-        };
-      };
-      tb_boards: {
-        Row: {
-          id: string;
-          created_at: string;
-          title: string;
-          owner_id: string;
-        };
-        Insert: {
-          id?: string;
-          created_at?: string;
-          title: string;
-          owner_id: string;
-        };
-        Update: {
-          id?: string;
-          created_at?: string;
-          title?: string;
-          owner_id?: string;
-        };
-      };
-      tb_columns_board: {
-        Row: {
-          id: string;
-          created_at: string;
-          title: string;
-          board_id: string;
-          order: number;
-        };
-        Insert: {
-          id?: string;
-          created_at?: string;
-          title: string;
-          board_id: string;
-          order: number;
-        };
-        Update: {
-          id?: string;
-          created_at?: string;
-          title?: string;
-          board_id?: string;
-          order?: number;
-        };
-      };
-      tb_tasks: {
-        Row: {
-          id: string;
-          created_at: string;
-          title: string;
-          description: string | null;
-          column_id: string;
-          order: number | null;
-          priority: number | null;
-        };
-        Insert: {
-          id?: string;
-          created_at?: string;
-          title: string;
-          description?: string | null;
-          column_id: string;
-          order?: number | null;
-          priority?: number | null;
-        };
-        Update: {
-          id?: string;
-          created_at?: string;
-          title?: string;
-          description?: string | null;
-          column_id?: string;
-          order?: number | null;
-          priority?: number | null;
-        };
-      };
-    };
-  };
+// Types for authentication
+export interface AuthUser {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+// Authentication functions
+export const authService = {
+  // Sign up with email and password
+  async signUp(email: string, password: string, name?: string) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: name || email.split('@')[0],
+        }
+      }
+    });
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Sign in with email and password
+  async signIn(email: string, password: string) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+    return data;
+  },
+
+  // Sign out
+  async signOut() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  },
+
+  // Get current session
+  async getSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    return session;
+  },
+
+  // Get current user
+  async getUser() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    return user;
+  },
+
+  // Listen to auth changes
+  onAuthStateChange(callback: (event: string, session: any) => void) {
+    return supabase.auth.onAuthStateChange(callback);
+  }
 };

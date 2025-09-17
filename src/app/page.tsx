@@ -4,12 +4,21 @@ import React from 'react';
 import { Box, CircularProgress, Typography, Alert } from '@mui/material';
 import { KanbanBoard } from '../components/KanbanBoard';
 import { BoardManager } from '../components/BoardManager';
+import { AuthForm } from '../components/AuthForm';
+import { AppHeader } from '../components/AppHeader';
 import { useApp } from '../contexts/AppContext';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Home() {
   const { currentBoard, loading, error, updateBoard, setCurrentBoard } = useApp();
+  const { user: authUser, loading: authLoading } = useAuth();
 
-  if (loading) {
+  // Show auth form if user is not authenticated
+  if (!authUser && !authLoading) {
+    return <AuthForm />;
+  }
+
+  if (loading || authLoading) {
     return (
       <Box 
         display="flex" 
@@ -69,6 +78,7 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#F3E5F5' }}>
+      <AppHeader />
       {currentBoard ? (
         <KanbanBoard
           board={currentBoard}

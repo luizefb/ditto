@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Board } from '../types/kanban';
 import { createUser, getUserByEmail, getBoardsByOwner } from '../lib/api';
+import { useAuth } from './AuthContext';
 
 interface AppContextType {
   user: User | null;
@@ -35,31 +36,38 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  const { user: authUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [boards, setBoards] = useState<Board[]>([]);
   const [currentBoard, setCurrentBoardState] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Mock user data
-  const mockUserData = {
-    name: 'Usuário Demo',
-    email: 'demo@dittokanban.com',
-  };
+  const initializeUserFromAuth = async () => {
+    if (!authUser) {
+      setUser(null);
+      setBoards([]);
+      setCurrentBoardState(null);
+      setLoading(false);
+      return;
+    }
 
-  const initializeMockUser = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Tentar encontrar usuário existente
-      let existingUser = await getUserByEmail(mockUserData.email);
+      // Tentar encontrar usuário existente pelo email
+      let existingUser = await getUserByEmail(authUser.email!);
 
       if (!existingUser) {
-        // Criar usuário mock se não existir
-        existingUser = await createUser(mockUserData);
+        // Criar usuário se não existir
+        const userData = {
+          name: authUser.user_metadata?.name || authUser.email!.split('@')[0],
+          email: authUser.email!,
+        };
+        existingUser = await createUser(userData);
         if (!existingUser) {
-          throw new Error('Falha ao criar usuário demo');
+          throw new Error('Falha ao criar usuário');
         }
       }
 
@@ -75,6 +83,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const initializeMockUser = async () => {
+    // Esta função agora é mantida para compatibilidade, mas não é mais usada
+    await initializeUserFromAuth();
   };
 
   const refreshBoards = async () => {
@@ -117,10 +130,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
-  // Inicializar usuário mock na primeira renderização
+  // Inicializar usuário quando o estado de autenticação mudar
   useEffect(() => {
-    initializeMockUser();
-  }, []);
+    initializeUserFromAuth();
+  }, [authUser]);
 
   const value: AppContextType = {
     user,
