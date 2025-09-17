@@ -20,6 +20,7 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 import { IconButton, InputAdornment } from '@mui/material';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { DittoBackground, DittoLoader } from './DittoElements';
 
@@ -29,7 +30,13 @@ interface AuthFormProps {
 
 export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const { signIn, signUp, loading, error, clearError } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isSignUp, setIsSignUp] = useState(pathname === '/signup');
+
+  React.useEffect(() => {
+    setIsSignUp(pathname === '/signup');
+  }, [pathname]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -77,7 +84,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     
     const validationError = validateForm();
     if (validationError) {
-      // You might want to show this error in the UI
       return;
     }
 
@@ -89,12 +95,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       }
       onSuccess?.();
     } catch (err) {
-      // Error is handled by the context
+      
     }
   };
 
   const switchMode = () => {
-    setIsSignUp(!isSignUp);
+    const newPath = isSignUp ? '/login' : '/signup';
+    router.push(newPath);
     setFormData({
       email: '',
       password: '',

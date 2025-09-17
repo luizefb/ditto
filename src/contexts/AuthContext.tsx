@@ -41,7 +41,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const session = await authService.getSession();
         setUser(session?.user || null);
       } catch (err) {
-        console.error('Error initializing auth:', err);
         setError('Erro ao inicializar autenticação');
       } finally {
         setLoading(false);
@@ -67,7 +66,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       await authService.signIn(email, password);
     } catch (err: any) {
-      console.error('Sign in error:', err);
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -80,7 +78,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       await authService.signUp(email, password, name);
     } catch (err: any) {
-      console.error('Sign up error:', err);
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -93,7 +90,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       await authService.signOut();
     } catch (err: any) {
-      console.error('Sign out error:', err);
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
@@ -104,7 +100,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setError(null);
   };
 
-  // Helper function to get user-friendly error messages
   const getErrorMessage = (error: any): string => {
     if (error.message) {
       switch (error.message) {

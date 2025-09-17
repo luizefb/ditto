@@ -16,14 +16,21 @@ import {
   Person as PersonIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { useApp } from '../contexts/AppContext';
 
 export const AppHeader: React.FC = () => {
   const { user: authUser, signOut } = useAuth();
-  const { user, currentBoard, setCurrentBoard } = useApp();
+  const { user } = useApp();
+  const router = useRouter();
+  const pathname = usePathname();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  // Extract board info from current path
+  const isOnBoardPage = pathname?.startsWith('/board/');
+  const boardId = isOnBoardPage ? pathname?.split('/board/')[1] : null;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,10 +43,11 @@ export const AppHeader: React.FC = () => {
   const handleLogout = async () => {
     handleMenuClose();
     await signOut();
+    router.push('/login');
   };
 
   const handleBackToBoards = () => {
-    setCurrentBoard(null);
+    router.push('/dashboard');
   };
 
   if (!authUser || !user) return null;
@@ -97,7 +105,7 @@ export const AppHeader: React.FC = () => {
           DITTO KANBAN
         </Typography>
 
-        {currentBoard && (
+        {isOnBoardPage && (
           <>
             <Typography variant="h6" sx={{ color: '#9C27B0', mx: 1 }}>
               /
@@ -109,7 +117,7 @@ export const AppHeader: React.FC = () => {
                 fontWeight: 600,
               }}
             >
-              {currentBoard.title}
+              Board
             </Typography>
           </>
         )}
