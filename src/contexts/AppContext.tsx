@@ -11,9 +11,7 @@ interface AppContextType {
   currentBoard: Board | null;
   loading: boolean;
   error: string | null;
-  // User actions
   initializeMockUser: () => Promise<void>;
-  // Board actions
   setCurrentBoard: (board: Board | null) => void;
   refreshBoards: () => Promise<void>;
   addBoard: (board: Board) => void;
@@ -56,11 +54,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      // Tentar encontrar usuário existente pelo email
       let existingUser = await getUserByEmail(authUser.email!);
 
       if (!existingUser) {
-        // Criar usuário se não existir
         const userData = {
           name: authUser.user_metadata?.name || authUser.email!.split('@')[0],
           email: authUser.email!,
@@ -73,12 +69,10 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
       setUser(existingUser);
       
-      // Carregar boards do usuário
       const userBoards = await getBoardsByOwner(existingUser.id);
       setBoards(userBoards);
 
     } catch (err) {
-      console.error('Erro ao inicializar usuário:', err);
       setError('Erro ao carregar dados do usuário');
     } finally {
       setLoading(false);
@@ -86,7 +80,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const initializeMockUser = async () => {
-    // Esta função agora é mantida para compatibilidade, mas não é mais usada
     await initializeUserFromAuth();
   };
 
@@ -97,7 +90,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const userBoards = await getBoardsByOwner(user.id);
       setBoards(userBoards);
     } catch (err) {
-      console.error('Erro ao recarregar boards:', err);
       setError('Erro ao carregar boards');
     }
   };
@@ -115,7 +107,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       board.id === updatedBoard.id ? updatedBoard : board
     ));
     
-    // Atualizar board atual se for o mesmo
     if (currentBoard?.id === updatedBoard.id) {
       setCurrentBoardState(updatedBoard);
     }
@@ -124,13 +115,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const removeBoard = (boardId: string) => {
     setBoards(prev => prev.filter(board => board.id !== boardId));
     
-    // Limpar board atual se for o que foi removido
     if (currentBoard?.id === boardId) {
       setCurrentBoardState(null);
     }
   };
 
-  // Inicializar usuário quando o estado de autenticação mudar
   useEffect(() => {
     initializeUserFromAuth();
   }, [authUser]);

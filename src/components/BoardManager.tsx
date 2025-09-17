@@ -56,7 +56,7 @@ export const BoardManager: React.FC = () => {
         setIsCreateDialogOpen(false);
       }
     } catch (error) {
-      console.error('Erro ao criar board:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -79,7 +79,7 @@ export const BoardManager: React.FC = () => {
         setIsEditDialogOpen(false);
       }
     } catch (error) {
-      console.error('Erro ao editar board:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export const BoardManager: React.FC = () => {
         removeBoard(boardId);
       }
     } catch (error) {
-      console.error('Erro ao deletar board:', error);
+      
     } finally {
       setLoading(false);
     }

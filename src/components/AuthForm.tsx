@@ -34,7 +34,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const pathname = usePathname();
   const [isSignUp, setIsSignUp] = useState(pathname === '/signup');
 
-  // Sync isSignUp state with current route
   React.useEffect(() => {
     setIsSignUp(pathname === '/signup');
   }, [pathname]);
@@ -85,7 +84,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     
     const validationError = validateForm();
     if (validationError) {
-      // You might want to show this error in the UI
       return;
     }
 
@@ -97,7 +95,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
       }
       onSuccess?.();
     } catch (err) {
-      // Error is handled by the context
+      
     }
   };
 

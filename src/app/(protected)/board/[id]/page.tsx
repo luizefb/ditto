@@ -35,7 +35,6 @@ export default function BoardPage() {
         
         setBoard(boardData);
       } catch (err) {
-        console.error('Erro ao carregar board:', err);
         setError('Erro ao carregar board');
       } finally {
         setLoading(false);
