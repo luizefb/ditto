@@ -33,6 +33,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isSignUp, setIsSignUp] = useState(pathname === '/signup');
+
+  // Sync isSignUp state with current route
+  React.useEffect(() => {
+    setIsSignUp(pathname === '/signup');
+  }, [pathname]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',

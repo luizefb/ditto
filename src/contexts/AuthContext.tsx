@@ -65,7 +65,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      await authService.signIn(email, password);
+      console.log('AuthContext: Attempting sign in...');
+      const result = await authService.signIn(email, password);
+      console.log('AuthContext: Sign in successful', result.user?.email);
     } catch (err: any) {
       console.error('Sign in error:', err);
       setError(getErrorMessage(err));
@@ -78,7 +80,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      await authService.signUp(email, password, name);
+      console.log('AuthContext: Attempting sign up...');
+      const result = await authService.signUp(email, password, name);
+      console.log('AuthContext: Sign up successful', result.user?.email);
     } catch (err: any) {
       console.error('Sign up error:', err);
       setError(getErrorMessage(err));
