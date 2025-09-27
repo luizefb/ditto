@@ -7,14 +7,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// Types for authentication
-export interface AuthUser {
-  id: string;
-  email: string;
-  name?: string;
-}
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
 // Authentication functions
 export const authService = {
@@ -47,7 +46,8 @@ export const authService = {
 
   // Sign out
   async signOut() {
-    const { error } = await supabase.auth.signOut();
+    // Sign out with scope 'local' to prevent server-side session issues
+    const { error } = await supabase.auth.signOut({ scope: 'local' });
     if (error) throw error;
   },
 
@@ -66,7 +66,7 @@ export const authService = {
   },
 
   // Listen to auth changes
-  onAuthStateChange(callback: (event: string, session: any) => void) {
+  onAuthStateChange(callback: (event: string, session: unknown) => void) {
     return supabase.auth.onAuthStateChange(callback);
   }
 };

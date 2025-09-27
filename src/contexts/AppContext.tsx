@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Board } from '../types/kanban';
 import { createUser, getUserByEmail, getBoardsByOwner } from '../lib/api';
-import { useAuth } from './AuthContext';
 
 interface AppContextType {
   user: User | null;
@@ -11,9 +10,7 @@ interface AppContextType {
   currentBoard: Board | null;
   loading: boolean;
   error: string | null;
-  // User actions
   initializeMockUser: () => Promise<void>;
-  // Board actions
   setCurrentBoard: (board: Board | null) => void;
   refreshBoards: () => Promise<void>;
   addBoard: (board: Board) => void;
@@ -36,58 +33,44 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const { user: authUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [boards, setBoards] = useState<Board[]>([]);
   const [currentBoard, setCurrentBoardState] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const initializeUserFromAuth = async () => {
-    if (!authUser) {
-      setUser(null);
-      setBoards([]);
-      setCurrentBoardState(null);
-      setLoading(false);
-      return;
-    }
-
+  const initializeMockUser = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Tentar encontrar usuário existente pelo email
-      let existingUser = await getUserByEmail(authUser.email!);
+      // Mock user data
+      const mockUserData = {
+        name: 'Usuário Ditto',
+        email: 'usuario@ditto.com',
+      };
+
+      // Try to get existing user or create new one
+      let existingUser = await getUserByEmail(mockUserData.email);
 
       if (!existingUser) {
-        // Criar usuário se não existir
-        const userData = {
-          name: authUser.user_metadata?.name || authUser.email!.split('@')[0],
-          email: authUser.email!,
-        };
-        existingUser = await createUser(userData);
+        existingUser = await createUser(mockUserData);
         if (!existingUser) {
-          throw new Error('Falha ao criar usuário');
+          throw new Error('Falha ao criar usuário mock');
         }
       }
 
       setUser(existingUser);
       
-      // Carregar boards do usuário
       const userBoards = await getBoardsByOwner(existingUser.id);
       setBoards(userBoards);
 
     } catch (err) {
-      console.error('Erro ao inicializar usuário:', err);
+      console.error('Erro ao inicializar usuário mock:', err);
       setError('Erro ao carregar dados do usuário');
     } finally {
       setLoading(false);
     }
-  };
-
-  const initializeMockUser = async () => {
-    // Esta função agora é mantida para compatibilidade, mas não é mais usada
-    await initializeUserFromAuth();
   };
 
   const refreshBoards = async () => {
@@ -97,7 +80,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       const userBoards = await getBoardsByOwner(user.id);
       setBoards(userBoards);
     } catch (err) {
-      console.error('Erro ao recarregar boards:', err);
       setError('Erro ao carregar boards');
     }
   };
@@ -115,7 +97,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       board.id === updatedBoard.id ? updatedBoard : board
     ));
     
-    // Atualizar board atual se for o mesmo
     if (currentBoard?.id === updatedBoard.id) {
       setCurrentBoardState(updatedBoard);
     }
@@ -124,16 +105,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const removeBoard = (boardId: string) => {
     setBoards(prev => prev.filter(board => board.id !== boardId));
     
-    // Limpar board atual se for o que foi removido
     if (currentBoard?.id === boardId) {
       setCurrentBoardState(null);
     }
   };
 
-  // Inicializar usuário quando o estado de autenticação mudar
   useEffect(() => {
-    initializeUserFromAuth();
-  }, [authUser]);
+    initializeMockUser();
+  }, []);
 
   const value: AppContextType = {
     user,

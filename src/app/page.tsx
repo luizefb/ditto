@@ -1,48 +1,31 @@
 'use client';
 
 import React from 'react';
-import { Box, CircularProgress, Typography, Alert } from '@mui/material';
+import { useApp } from '../contexts/AppContext';
+import { Box, CircularProgress, Alert } from '@mui/material';
 import { KanbanBoard } from '../components/KanbanBoard';
 import { BoardManager } from '../components/BoardManager';
-import { AuthForm } from '../components/AuthForm';
-import { AppHeader } from '../components/AppHeader';
-import { useApp } from '../contexts/AppContext';
-import { useAuth } from '../contexts/AuthContext';
 
 export default function Home() {
-  const { currentBoard, loading, error, updateBoard, setCurrentBoard } = useApp();
-  const { user: authUser, loading: authLoading } = useAuth();
+  const { currentBoard, loading, error, setCurrentBoard, updateBoard } = useApp();
 
-  // Show auth form if user is not authenticated
-  if (!authUser && !authLoading) {
-    return <AuthForm />;
-  }
-
-  if (loading || authLoading) {
+  if (loading) {
     return (
       <Box 
         display="flex" 
         justifyContent="center" 
         alignItems="center" 
         minHeight="100vh"
-        sx={{ backgroundColor: '#F3E5F5' }}
+        sx={{ backgroundColor: '#F8FAFC' }}
       >
-        <Box textAlign="center">
-          <CircularProgress 
-            size={60} 
-            sx={{ 
-              color: '#FF6B9D',
-              mb: 2,
-            }} 
-          />
-          <Typography variant="h6" sx={{ 
-            color: '#E91E63',
-            fontWeight: 700,
-            textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
-          }}>
-            CARREGANDO DITTO KANBAN...
-          </Typography>
-        </Box>
+        <CircularProgress 
+          sx={{ 
+            color: '#2563EB',
+            '& .MuiCircularProgress-circle': {
+              strokeWidth: 3,
+            },
+          }} 
+        />
       </Box>
     );
   }
@@ -54,40 +37,36 @@ export default function Home() {
         justifyContent="center" 
         alignItems="center" 
         minHeight="100vh"
-        sx={{ backgroundColor: '#FAFAFA', p: 3 }}
+        sx={{ backgroundColor: '#F8FAFC', p: 2 }}
       >
         <Alert 
           severity="error" 
           sx={{ 
             maxWidth: 500,
+            border: '2px solid #f44336',
+            borderRadius: 2,
             '& .MuiAlert-icon': {
-              color: '#E91E63',
+              color: '#DC2626',
             },
           }}
         >
-          <Typography variant="h6" sx={{ mb: 1 }}>
-            Ops! Algo deu errado
-          </Typography>
-          <Typography variant="body2">
-            {error}
-          </Typography>
+          {error}
         </Alert>
       </Box>
     );
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#F3E5F5' }}>
-      <AppHeader />
+    <Box sx={{ backgroundColor: '#F8FAFC', minHeight: '100vh' }}>
       {currentBoard ? (
-        <KanbanBoard
-          board={currentBoard}
-          onUpdateBoard={updateBoard}
+        <KanbanBoard 
+          board={currentBoard} 
           onBack={() => setCurrentBoard(null)}
+          onUpdateBoard={updateBoard}
         />
       ) : (
         <BoardManager />
       )}
-    </div>
+    </Box>
   );
 }

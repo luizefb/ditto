@@ -7,24 +7,24 @@ export const dittoTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#FF6B9D', // Rosa vibrante pixel art
-      light: '#FF9EC5', // Rosa claro vibrante
-      dark: '#E91E63', // Rosa escuro vibrante
+      main: '#2563EB', // Azul profissional
+      light: '#60A5FA', // Azul claro
+      dark: '#1D4ED8', // Azul escuro
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#9C27B0', // Roxo vibrante
-      light: '#CE93D8',
-      dark: '#7B1FA2',
+      main: '#64748B', // Cinza azulado
+      light: '#94A3B8',
+      dark: '#475569',
       contrastText: '#FFFFFF',
     },
     background: {
-      default: '#F3E5F5', // Fundo lilás claro
+      default: '#F8FAFC', // Fundo cinza muito claro
       paper: '#FFFFFF',
     },
     text: {
-      primary: '#1A1A1A',
-      secondary: '#424242',
+      primary: '#1E293B',
+      secondary: '#64748B',
     },
   },
   typography: {
@@ -32,25 +32,22 @@ export const dittoTheme = createTheme({
     h1: {
       fontWeight: 700,
       fontSize: '2.5rem',
-      color: '#E91E63',
-      textShadow: '2px 2px 0px rgba(0,0,0,0.1)',
+      color: '#1D4ED8',
     },
     h2: {
       fontWeight: 700,
       fontSize: '2rem',
-      color: '#FF6B9D',
-      textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
+      color: '#2563EB',
     },
     h3: {
       fontWeight: 700,
       fontSize: '1.5rem',
-      color: '#FF6B9D',
-      textShadow: '1px 1px 0px rgba(0,0,0,0.1)',
+      color: '#2563EB',
     },
     h4: {
       fontWeight: 500,
       fontSize: '1.25rem',
-      color: '#9C27B0',
+      color: '#475569',
     },
     h6: {
       fontWeight: 700,
@@ -63,24 +60,24 @@ export const dittoTheme = createTheme({
       fontWeight: 400,
     },
     button: {
-      fontWeight: 700,
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px',
+      fontWeight: 600,
+      textTransform: 'none',
+      letterSpacing: '0.25px',
     },
   },
   shape: {
-    borderRadius: 4, // Bordas mais pixeladas
+    borderRadius: 8, // Bordas mais suaves
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          boxShadow: '4px 4px 0px rgba(255, 107, 157, 0.3)', // Sombra pixel art
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
           transition: 'all 0.2s ease',
-          border: '2px solid #FF6B9D',
+          border: '1px solid #E2E8F0',
           '&:hover': {
-            boxShadow: '6px 6px 0px rgba(255, 107, 157, 0.4)',
-            transform: 'translate(-2px, -2px)',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            transform: 'translateY(-1px)',
           },
         },
       },
@@ -88,19 +85,13 @@ export const dittoTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 4, // Bordas pixeladas
-          textTransform: 'uppercase',
-          fontWeight: 700,
-          padding: '12px 24px',
-          border: '2px solid transparent',
-          boxShadow: '2px 2px 0px rgba(0,0,0,0.2)',
+          borderRadius: 8,
+          textTransform: 'none',
+          fontWeight: 600,
+          padding: '8px 16px',
+          boxShadow: 'none',
           '&:hover': {
-            transform: 'translate(-1px, -1px)',
-            boxShadow: '3px 3px 0px rgba(0,0,0,0.3)',
-          },
-          '&:active': {
-            transform: 'translate(1px, 1px)',
-            boxShadow: '1px 1px 0px rgba(0,0,0,0.2)',
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
           },
         },
       },
@@ -108,8 +99,8 @@ export const dittoTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: 'linear-gradient(135deg, #FFFFFF 0%, #F3E5F5 100%)',
-          border: '1px solid #FF9EC5',
+          background: '#FFFFFF',
+          border: '1px solid #E2E8F0',
         },
       },
     },
@@ -117,17 +108,15 @@ export const dittoTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            borderRadius: 4,
+            borderRadius: 8,
             '& fieldset': {
-              borderWidth: '2px',
-              borderColor: '#FF9EC5',
+              borderColor: '#D1D5DB',
             },
             '&:hover fieldset': {
-              borderColor: '#FF6B9D',
+              borderColor: '#94A3B8',
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#E91E63',
-              borderWidth: '2px',
+              borderColor: '#2563EB',
             },
           },
           '& .MuiInputLabel-root': {
@@ -140,9 +129,9 @@ export const dittoTheme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: {
-          borderRadius: 4,
+          borderRadius: 8,
           '&:hover': {
-            backgroundColor: 'rgba(255, 107, 157, 0.1)',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
           },
         },
       },
@@ -150,11 +139,10 @@ export const dittoTheme = createTheme({
     MuiFab: {
       styleOverrides: {
         root: {
-          borderRadius: 4,
-          boxShadow: '2px 2px 0px rgba(0,0,0,0.2)',
+          borderRadius: 8,
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
           '&:hover': {
-            transform: 'translate(-1px, -1px)',
-            boxShadow: '3px 3px 0px rgba(0,0,0,0.3)',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
           },
         },
       },

@@ -10,7 +10,6 @@ import {
   Button,
   Box,
   Typography,
-  Avatar,
 } from '@mui/material';
 import { Column } from '../types/kanban';
 

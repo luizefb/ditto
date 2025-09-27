@@ -16,7 +16,6 @@ import {
   IconButton,
   Grid,
   Chip,
-  Avatar,
   Fab,
 } from '@mui/material';
 import {
@@ -54,7 +53,7 @@ export const BoardManager: React.FC = () => {
         setIsCreateDialogOpen(false);
       }
     } catch (error) {
-      console.error('Erro ao criar board:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -77,7 +76,7 @@ export const BoardManager: React.FC = () => {
         setIsEditDialogOpen(false);
       }
     } catch (error) {
-      console.error('Erro ao editar board:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -95,7 +94,7 @@ export const BoardManager: React.FC = () => {
         removeBoard(boardId);
       }
     } catch (error) {
-      console.error('Erro ao deletar board:', error);
+      
     } finally {
       setLoading(false);
     }
@@ -104,7 +103,7 @@ export const BoardManager: React.FC = () => {
   const handleViewBoard = async (board: Board) => {
     try {
       setLoading(true);
-      // Buscar board completo com colunas e tarefas
+      // Buscar o board completo com colunas e tarefas
       const fullBoard = await getBoardById(board.id);
       if (fullBoard) {
         setCurrentBoard(fullBoard);
@@ -293,9 +292,9 @@ export const BoardManager: React.FC = () => {
                     onClick={() => handleViewBoard(board)}
                     disabled={loading}
                     sx={{
-                      background: 'linear-gradient(45deg, #FF69B4 30%, #FF1493 90%)',
+                      backgroundColor: '#2563EB',
                       '&:hover': {
-                        background: 'linear-gradient(45deg, #FF1493 30%, #DC143C 90%)',
+                        backgroundColor: '#1D4ED8',
                       },
                     }}
                   >
