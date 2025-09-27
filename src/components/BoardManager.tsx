@@ -16,7 +16,6 @@ import {
   IconButton,
   Grid,
   Chip,
-  Avatar,
   Fab,
 } from '@mui/material';
 import {
@@ -25,14 +24,12 @@ import {
   Edit as EditIcon,
   Visibility as ViewIcon,
 } from '@mui/icons-material';
-import { useRouter } from 'next/navigation';
 import { useApp } from '../contexts/AppContext';
 import { createBoard, deleteBoard, updateBoard, getBoardById } from '../lib/api';
 import { Board, CreateBoard, UpdateBoard } from '../types/kanban';
 
 export const BoardManager: React.FC = () => {
-  const { user, boards, refreshBoards, addBoard, removeBoard } = useApp();
-  const router = useRouter();
+  const { user, boards, refreshBoards, addBoard, removeBoard, setCurrentBoard } = useApp();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingBoard, setEditingBoard] = useState<Board | null>(null);
@@ -103,8 +100,19 @@ export const BoardManager: React.FC = () => {
     }
   };
 
-  const handleViewBoard = (board: Board) => {
-    router.push(`/board/${board.id}`);
+  const handleViewBoard = async (board: Board) => {
+    try {
+      setLoading(true);
+      // Buscar o board completo com colunas e tarefas
+      const fullBoard = await getBoardById(board.id);
+      if (fullBoard) {
+        setCurrentBoard(fullBoard);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar board:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const openEditDialog = (board: Board) => {
@@ -284,9 +292,9 @@ export const BoardManager: React.FC = () => {
                     onClick={() => handleViewBoard(board)}
                     disabled={loading}
                     sx={{
-                      background: 'linear-gradient(45deg, #FF69B4 30%, #FF1493 90%)',
+                      backgroundColor: '#2563EB',
                       '&:hover': {
-                        background: 'linear-gradient(45deg, #FF1493 30%, #DC143C 90%)',
+                        backgroundColor: '#1D4ED8',
                       },
                     }}
                   >

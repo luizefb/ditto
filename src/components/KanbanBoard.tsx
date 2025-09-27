@@ -6,21 +6,17 @@ import {
   Typography,
   AppBar,
   Toolbar,
-  Avatar,
   IconButton,
   Button,
-  Container,
 } from '@mui/material';
 import {
-  Settings as SettingsIcon,
-  Notifications as NotificationsIcon,
   Add as AddIcon,
   ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material';
 import { KanbanColumn } from './KanbanColumn';
 import { TaskDialog } from './TaskDialog';
 import { ColumnDialog } from './ColumnDialog';
-import { Board, Task, Column, Priority, CreateColumn, CreateTask, UpdateColumn, UpdateTask, DEFAULT_COLUMN_COLORS } from '../types/kanban';
+import { Board, Task, Column, Priority, CreateColumn, CreateTask, UpdateColumn, UpdateTask } from '../types/kanban';
 import { createColumn, updateColumn, deleteColumn, createTask, updateTask, deleteTask, moveTask, getBoardById } from '../lib/api';
 
 interface KanbanBoardProps {
@@ -203,8 +199,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     <>
       {/* Header */}
       <AppBar position="static" sx={{ 
-        background: '#FF6B9D',
-        boxShadow: '0 2px 0px rgba(255, 107, 157, 0.3)',
+        background: '#2563EB',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
         mb: { xs: 2, sm: 3 },
       }}>
         <Toolbar 
@@ -244,7 +240,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               width: { xs: 6, sm: 10 },
               height: { xs: 6, sm: 10 },
               borderRadius: 0,
-              backgroundColor: '#FF6B9D',
+              backgroundColor: '#2563EB',
               transform: 'rotate(45deg)',
             }} />
           </Box>
@@ -274,8 +270,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             sx={{ 
               mr: { xs: 1, sm: 2 }, 
               fontWeight: 600,
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: 1,
               fontSize: { xs: '0.8rem', sm: '0.875rem' },
               px: { xs: 1.5, sm: 2 },
@@ -283,7 +279,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               minWidth: { xs: 'auto', sm: 'auto' },
               height: { xs: 32, sm: 36 },
               '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
               },
             }}
           >
@@ -297,34 +293,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             </Box>
           </Button>
           
-          {/* Menu de ações - sempre visível em mobile como ícones compactos */}
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <IconButton 
-              color="inherit"
-              size="small"
-              sx={{ 
-                p: { xs: 0.5, sm: 1 },
-                '& .MuiSvgIcon-root': {
-                  fontSize: { xs: 20, sm: 24 },
-                },
-              }}
-            >
-              <NotificationsIcon />
-            </IconButton>
-            
-            <IconButton 
-              color="inherit"
-              size="small"
-              sx={{ 
-                p: { xs: 0.5, sm: 1 },
-                '& .MuiSvgIcon-root': {
-                  fontSize: { xs: 20, sm: 24 },
-                },
-              }}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </Box>
         </Toolbar>
       </AppBar>
 

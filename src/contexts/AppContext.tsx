@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, Board } from '../types/kanban';
 import { createUser, getUserByEmail, getBoardsByOwner } from '../lib/api';
-import { useAuth } from './AuthContext';
 
 interface AppContextType {
   user: User | null;
@@ -34,36 +33,30 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const { user: authUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [boards, setBoards] = useState<Board[]>([]);
   const [currentBoard, setCurrentBoardState] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const initializeUserFromAuth = async () => {
-    if (!authUser) {
-      setUser(null);
-      setBoards([]);
-      setCurrentBoardState(null);
-      setLoading(false);
-      return;
-    }
-
+  const initializeMockUser = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      let existingUser = await getUserByEmail(authUser.email!);
+      // Mock user data
+      const mockUserData = {
+        name: 'Usuário Ditto',
+        email: 'usuario@ditto.com',
+      };
+
+      // Try to get existing user or create new one
+      let existingUser = await getUserByEmail(mockUserData.email);
 
       if (!existingUser) {
-        const userData = {
-          name: authUser.user_metadata?.name || authUser.email!.split('@')[0],
-          email: authUser.email!,
-        };
-        existingUser = await createUser(userData);
+        existingUser = await createUser(mockUserData);
         if (!existingUser) {
-          throw new Error('Falha ao criar usuário');
+          throw new Error('Falha ao criar usuário mock');
         }
       }
 
@@ -73,14 +66,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setBoards(userBoards);
 
     } catch (err) {
+      console.error('Erro ao inicializar usuário mock:', err);
       setError('Erro ao carregar dados do usuário');
     } finally {
       setLoading(false);
     }
-  };
-
-  const initializeMockUser = async () => {
-    await initializeUserFromAuth();
   };
 
   const refreshBoards = async () => {
@@ -121,8 +111,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    initializeUserFromAuth();
-  }, [authUser]);
+    initializeMockUser();
+  }, []);
 
   const value: AppContextType = {
     user,

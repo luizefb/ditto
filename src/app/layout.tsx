@@ -1,11 +1,9 @@
 'use client';
 
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { dittoTheme } from '../theme/theme';
-import { AuthProvider } from '../contexts/AuthContext';
 import { AppProvider } from '../contexts/AppContext';
 import "./globals.css";
 
@@ -35,11 +33,9 @@ export default function RootLayout({
       >
         <ThemeProvider theme={dittoTheme}>
           <CssBaseline />
-          <AuthProvider>
-            <AppProvider>
-              {children}
-            </AppProvider>
-          </AuthProvider>
+          <AppProvider>
+            {children}
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>

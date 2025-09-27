@@ -46,19 +46,19 @@ export const PRIORITY_LABELS = {
 } as const;
 
 export const PRIORITY_COLORS = {
-  1: '#00E676',    // Verde neon - low
-  2: '#FFD700',    // Dourado vibrante - medium
-  3: '#FF1744',    // Vermelho vibrante - high
+  1: '#059669',    // Verde profissional - low
+  2: '#EA580C',    // Laranja profissional - medium
+  3: '#DC2626',    // Vermelho profissional - high
 } as const;
 
 // Cores padrão para colunas (para UI) - Pixel Art vibrantes
 export const DEFAULT_COLUMN_COLORS = [
-  '#FF6B9D', // Rosa vibrante
-  '#FFD700', // Dourado vibrante
-  '#00E676', // Verde neon
-  '#9C27B0', // Roxo vibrante
-  '#2196F3', // Azul vibrante
-  '#FF9800', // Laranja vibrante
+  '#2563EB', // Azul profissional
+  '#64748B', // Cinza azulado
+  '#059669', // Verde profissional
+  '#7C3AED', // Roxo profissional
+  '#DC2626', // Vermelho profissional
+  '#EA580C', // Laranja profissional
 ] as const;
 
 // Tipos para criação/atualização (sem campos gerados automaticamente)

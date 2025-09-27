@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import {
   Add as AddIcon,
-  MoreVert as MoreVertIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material';
@@ -239,20 +238,12 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           size="small"
           onClick={() => onAddTask?.(column.id)}
           sx={{
-            backgroundColor: '#FFD700',
-            color: '#000000',
-            border: '2px solid #FFC107',
-            boxShadow: '2px 2px 0px rgba(0,0,0,0.3)',
+            backgroundColor: '#059669',
+            color: '#FFFFFF',
             width: { xs: 40, sm: 56 },
             height: { xs: 40, sm: 56 },
             '&:hover': {
-              backgroundColor: '#FFC107',
-              transform: 'translate(-1px, -1px)',
-              boxShadow: '3px 3px 0px rgba(0,0,0,0.4)',
-            },
-            '&:active': {
-              transform: 'translate(1px, 1px)',
-              boxShadow: '1px 1px 0px rgba(0,0,0,0.3)',
+              backgroundColor: '#047857',
             },
             '& .MuiSvgIcon-root': {
               fontSize: { xs: 20, sm: 24 },
