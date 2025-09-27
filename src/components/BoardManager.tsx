@@ -264,15 +264,6 @@ export const BoardManager: React.FC = () => {
 
                   <Box display="flex" alignItems="center" gap={1} mb={2}>
                     <Chip
-                      label={`${board.columns?.length || 0} colunas`}
-                      size="small"
-                      sx={{
-                        backgroundColor: '#E8C2CA',
-                        color: '#A67C89',
-                        fontWeight: 600,
-                      }}
-                    />
-                    <Chip
                       label={formatDate(board.created_at)}
                       size="small"
                       sx={{

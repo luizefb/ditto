@@ -5,9 +5,10 @@ import { useApp } from '../contexts/AppContext';
 import { Box, CircularProgress, Alert } from '@mui/material';
 import { KanbanBoard } from '../components/KanbanBoard';
 import { BoardManager } from '../components/BoardManager';
+import { WelcomePage } from '../components/WelcomePage';
 
 export default function Home() {
-  const { currentBoard, loading, error, setCurrentBoard, updateBoard } = useApp();
+  const { currentBoard, loading, error, setCurrentBoard, updateBoard, showWelcome, setShowWelcome } = useApp();
 
   if (loading) {
     return (
@@ -54,6 +55,11 @@ export default function Home() {
         </Alert>
       </Box>
     );
+  }
+
+  // Show welcome page if showWelcome is true
+  if (showWelcome) {
+    return <WelcomePage onEnterBoards={() => setShowWelcome(false)} />;
   }
 
   return (

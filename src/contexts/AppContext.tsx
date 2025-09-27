@@ -10,12 +10,14 @@ interface AppContextType {
   currentBoard: Board | null;
   loading: boolean;
   error: string | null;
+  showWelcome: boolean;
   initializeMockUser: () => Promise<void>;
   setCurrentBoard: (board: Board | null) => void;
   refreshBoards: () => Promise<void>;
   addBoard: (board: Board) => void;
   updateBoard: (board: Board) => void;
   removeBoard: (boardId: string) => void;
+  setShowWelcome: (show: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -38,6 +40,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [currentBoard, setCurrentBoardState] = useState<Board | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showWelcome, setShowWelcome] = useState(true);
 
   const initializeMockUser = async () => {
     try {
@@ -120,12 +123,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     currentBoard,
     loading,
     error,
+    showWelcome,
     initializeMockUser,
     setCurrentBoard,
     refreshBoards,
     addBoard,
     updateBoard,
     removeBoard,
+    setShowWelcome,
   };
 
   return (
