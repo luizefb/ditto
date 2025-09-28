@@ -17,20 +17,17 @@ O **Ditto Kanban** é uma aplicação web moderna para organização e gerenciam
 ## 🖼️ Screenshots
 
 ### Página Principal
-<!-- Adicione aqui uma screenshot da página principal -->
-![Página Principal](./screenshots/main-page.png)
+<img width="1264" height="886" alt="image" src="https://github.com/user-attachments/assets/df9fdc57-582f-43c9-8d6b-793ea5e02054" />
 
 ### Gerenciamento de Boards
-<!-- Adicione aqui uma screenshot do gerenciamento de boards -->
-![Gerenciamento de Boards](./screenshots/board-manager.png)
+<img width="1898" height="734" alt="image" src="https://github.com/user-attachments/assets/6abd8ac6-db4a-4776-bd7f-dd625a718688" />
 
 ### Board Kanban
-<!-- Adicione aqui uma screenshot de um board Kanban -->
-![Board Kanban](./screenshots/kanban-board.png)
+<img width="1917" height="908" alt="image" src="https://github.com/user-attachments/assets/a998f8bb-ca84-4c9b-98bf-75afce5b1d10" />
 
 ### Criação de Tarefas
-<!-- Adicione aqui uma screenshot da criação de tarefas -->
-![Criação de Tarefas](./screenshots/task-creation.png)
+<img width="667" height="494" alt="image" src="https://github.com/user-attachments/assets/65ef67b1-4cfb-4c16-b565-6e23c5fb5c7b" />
+
 
 ## 🚀 Tecnologias Utilizadas
 
