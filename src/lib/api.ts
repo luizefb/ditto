@@ -1,7 +1,6 @@
 import { supabase } from './supabase';
 import { Board, Column, Task, CreateBoard, CreateColumn, CreateTask, UpdateBoard, UpdateColumn, UpdateTask, DEFAULT_COLUMN_COLORS } from '../types/kanban';
 
-// ============ BOARDS ============
 
 export const createBoard = async (boardData: CreateBoard): Promise<Board | null> => {
   const { data, error } = await supabase
@@ -36,7 +35,6 @@ export const getBoardById = async (id: string): Promise<Board | null> => {
     return null;
   }
 
-  // Adicionar cores às colunas e ordenar
   if (data.columns) {
     data.columns = data.columns
       .sort((a: Column, b: Column) => a.order - b.order)
@@ -95,7 +93,6 @@ export const deleteBoard = async (id: string): Promise<boolean> => {
   return true;
 };
 
-// ============ COLUMNS ============
 
 export const createColumn = async (columnData: CreateColumn): Promise<Column | null> => {
   const { data, error } = await supabase
@@ -142,10 +139,8 @@ export const deleteColumn = async (id: string): Promise<boolean> => {
   return true;
 };
 
-// ============ TASKS ============
 
 export const createTask = async (taskData: CreateTask): Promise<Task | null> => {
-  // Se não foi fornecida uma ordem, buscar a próxima disponível na coluna
   if (taskData.order === undefined) {
     const { data: tasks } = await supabase
       .from('tb_tasks')
@@ -203,7 +198,6 @@ export const deleteTask = async (id: string): Promise<boolean> => {
 };
 
 export const moveTask = async (taskId: string, newColumnId: string, newOrder?: number): Promise<Task | null> => {
-  // Se não foi fornecida uma nova ordem, colocar no final da coluna de destino
   if (newOrder === undefined) {
     const { data: tasks } = await supabase
       .from('tb_tasks')
@@ -234,7 +228,6 @@ export const moveTask = async (taskId: string, newColumnId: string, newOrder?: n
   return data;
 };
 
-// ============ USERS ============
 
 export const createUser = async (userData: { name: string; email: string }) => {
   const { data, error } = await supabase

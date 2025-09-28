@@ -142,7 +142,6 @@ export const BoardManager: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Box>
           <Typography variant="h4" sx={{ color: '#A67C89', fontWeight: 700, mb: 1 }}>
@@ -177,7 +176,6 @@ export const BoardManager: React.FC = () => {
         </Fab>
       </Box>
 
-      {/* Boards Grid */}
       {boards.length === 0 ? (
         <Card sx={{ textAlign: 'center', p: 4, backgroundColor: '#F8F6F7' }}>
           <Box sx={{ 
@@ -298,7 +296,6 @@ export const BoardManager: React.FC = () => {
         </Grid>
       )}
 
-      {/* Create Board Dialog */}
       <Dialog
         open={isCreateDialogOpen}
         onClose={() => setIsCreateDialogOpen(false)}
@@ -388,7 +385,6 @@ export const BoardManager: React.FC = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Edit Board Dialog */}
       <Dialog
         open={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}

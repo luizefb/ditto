@@ -43,13 +43,11 @@ export const ColumnDialog: React.FC<ColumnDialogProps> = ({
       title: title.trim(),
     });
 
-    // Reset form
     setTitle('');
   };
 
   const handleClose = () => {
     onClose();
-    // Reset form
     setTitle('');
   };
 

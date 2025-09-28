@@ -156,7 +156,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
           </Box>
         </Box>
 
-        {/* Indicador decorativo pixel art */}
         <Box display="flex" justifyContent="center" mt={{ xs: 0.5, sm: 1 }}>
           <Box
             sx={{

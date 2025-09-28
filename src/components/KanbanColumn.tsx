@@ -85,7 +85,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Header da coluna */}
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={{ xs: 1.5, sm: 2 }}>
         <Box display="flex" alignItems="center" gap={{ xs: 0.5, sm: 1 }} flex={1} minWidth={0}>
           <Box
@@ -162,7 +161,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
 
       <Divider sx={{ mb: { xs: 1.5, sm: 2 }, backgroundColor: '#E8C2CA' }} />
 
-      {/* Lista de tarefas */}
       <Box
         sx={{
           flex: 1,
@@ -232,7 +230,6 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         )}
       </Box>
 
-      {/* Botão para adicionar tarefa */}
       <Box display="flex" justifyContent="center" mt={{ xs: 1.5, sm: 2 }}>
         <Fab
           size="small"

@@ -1,4 +1,3 @@
-// Tipos baseados no schema do banco de dados
 
 export interface User {
   id: string;
@@ -22,7 +21,6 @@ export interface Column {
   board_id: string;
   order: number;
   tasks?: Task[];
-  // Propriedades para UI (não estão no banco)
   color?: string;
 }
 
@@ -33,11 +31,10 @@ export interface Task {
   description?: string | null;
   column_id: string;
   order?: number | null;
-  priority?: number | null; // 1 = low, 2 = medium, 3 = high
+  priority?: number | null;
 }
 
-// Tipos auxiliares para a interface
-export type Priority = 1 | 2 | 3; // 1 = low, 2 = medium, 3 = high
+export type Priority = 1 | 2 | 3;
 
 export const PRIORITY_LABELS = {
   1: 'Baixa',
@@ -51,7 +48,6 @@ export const PRIORITY_COLORS = {
   3: '#DC2626',    // Vermelho profissional - high
 } as const;
 
-// Cores padrão para colunas (para UI) - Pixel Art vibrantes
 export const DEFAULT_COLUMN_COLORS = [
   '#2563EB', // Azul profissional
   '#64748B', // Cinza azulado
@@ -61,7 +57,6 @@ export const DEFAULT_COLUMN_COLORS = [
   '#EA580C', // Laranja profissional
 ] as const;
 
-// Tipos para criação/atualização (sem campos gerados automaticamente)
 export interface CreateBoard {
   title: string;
   owner_id: string;

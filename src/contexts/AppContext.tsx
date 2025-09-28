@@ -47,13 +47,11 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      // Mock user data
       const mockUserData = {
         name: 'Usuário Ditto',
         email: 'usuario@ditto.com',
       };
 
-      // Try to get existing user or create new one
       let existingUser = await getUserByEmail(mockUserData.email);
 
       if (!existingUser) {

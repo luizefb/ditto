@@ -197,7 +197,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   return (
     <>
-      {/* Header */}
       <AppBar position="static" sx={{ 
         background: '#2563EB',
         boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
@@ -261,7 +260,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             {board.title}
           </Typography>
           
-          {/* Botão Nova Coluna - sempre visível */}
           <Button
             color="inherit"
             startIcon={<AddIcon sx={{ display: { xs: 'none', sm: 'inline-flex' } }} />}
@@ -283,11 +281,9 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
               },
             }}
           >
-            {/* Mobile: só ícone */}
             <Box sx={{ display: { xs: 'flex', sm: 'none' }, alignItems: 'center' }}>
               <AddIcon fontSize="small" />
             </Box>
-            {/* Desktop: texto completo */}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               Nova Coluna
             </Box>
@@ -296,7 +292,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         </Toolbar>
       </AppBar>
 
-      {/* Board Content */}
       <Box 
         sx={{ 
           height: { xs: 'calc(100vh - 100px)', sm: 'calc(100vh - 140px)' },
@@ -305,7 +300,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
           overflow: 'hidden',
         }}
       >
-        {/* Container de rolagem das colunas */}
         <Box
           sx={{
             flex: 1,
@@ -313,11 +307,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
             overflowY: 'hidden',
             px: { xs: 1, sm: 2 },
             py: { xs: 1, sm: 2 },
-            // Scroll suave em mobile
             WebkitOverflowScrolling: 'touch',
-            // Melhora a performance do scroll
             scrollBehavior: 'smooth',
-            // Estilo da scrollbar
             '&::-webkit-scrollbar': {
               height: { xs: '6px', sm: '8px' },
             },
@@ -336,7 +327,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 backgroundColor: '#A67C89',
               },
             },
-            // Sombras nas bordas para indicar scroll em mobile
             background: {
               xs: `
                 linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20px),
@@ -376,7 +366,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         </Box>
       </Box>
 
-      {/* Task Dialog */}
       <TaskDialog
         open={isTaskDialogOpen}
         task={selectedTask}
@@ -384,7 +373,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
         onSave={handleSaveTask}
       />
 
-      {/* Column Dialog */}
       <ColumnDialog
         open={isColumnDialogOpen}
         column={selectedColumn}

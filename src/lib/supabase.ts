@@ -15,9 +15,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 });
 
-// Authentication functions
 export const authService = {
-  // Sign up with email and password
   async signUp(email: string, password: string, name?: string) {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -33,7 +31,6 @@ export const authService = {
     return data;
   },
 
-  // Sign in with email and password
   async signIn(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -44,28 +41,23 @@ export const authService = {
     return data;
   },
 
-  // Sign out
   async signOut() {
-    // Sign out with scope 'local' to prevent server-side session issues
     const { error } = await supabase.auth.signOut({ scope: 'local' });
     if (error) throw error;
   },
 
-  // Get current session
   async getSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error) throw error;
     return session;
   },
 
-  // Get current user
   async getUser() {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error) throw error;
     return user;
   },
 
-  // Listen to auth changes
   onAuthStateChange(callback: (event: string, session: unknown) => void) {
     return supabase.auth.onAuthStateChange(callback);
   }

@@ -43,7 +43,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnterBoards }) => {
           }}
         >
           <Stack spacing={4} alignItems="center">
-            {/* Logo/Title */}
             <Box>
               <Typography
                 variant="h1"
@@ -71,7 +70,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnterBoards }) => {
               </Typography>
             </Box>
 
-            {/* Welcome Message */}
             <Box sx={{ maxWidth: 600 }}>
               <Typography
                 variant="body1"
@@ -109,7 +107,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnterBoards }) => {
               </Typography>
             </Box>
 
-            {/* Enter Button */}
             <Button
               variant="contained"
               size="large"
@@ -134,7 +131,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnterBoards }) => {
               Entrar nos Boards
             </Button>
 
-            {/* Features */}
             <Box
               sx={{
                 display: 'grid',

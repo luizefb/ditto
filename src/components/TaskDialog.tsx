@@ -55,7 +55,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
       priority,
     });
 
-    // Reset form
     setTitle('');
     setDescription('');
     setPriority(2);
@@ -63,7 +62,6 @@ export const TaskDialog: React.FC<TaskDialogProps> = ({
 
   const handleClose = () => {
     onClose();
-    // Reset form
     setTitle('');
     setDescription('');
     setPriority(2);

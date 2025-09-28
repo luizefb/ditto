@@ -57,7 +57,6 @@ export default function Home() {
     );
   }
 
-  // Show welcome page if showWelcome is true
   if (showWelcome) {
     return <WelcomePage onEnterBoards={() => setShowWelcome(false)} />;
   }
